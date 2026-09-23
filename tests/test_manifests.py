@@ -75,15 +75,16 @@ class TestReadmeParity(unittest.TestCase):
         self.assertTrue((PLUGIN_ROOT / "README.md").exists())
         self.assertTrue((PLUGIN_ROOT / "README.zh-CN.md").exists())
 
-    def test_same_h1(self) -> None:
-        readme = (PLUGIN_ROOT / "README.md").read_text()
-        zh = (PLUGIN_ROOT / "README.zh-CN.md").read_text()
-        # 提取第一行非空 markdown heading (H1) 作为 sanity check
+    def test_heading_structure_matches(self) -> None:
+        """双语 README 的标题层级序列必须一致（文本可译，结构不可漂移）."""
         import re
-        en_h1 = re.search(r"^# .+", readme, re.MULTILINE)
-        zh_h1 = re.search(r"^# .+", zh, re.MULTILINE)
-        self.assertIsNotNone(en_h1)
-        self.assertIsNotNone(zh_h1)
+
+        def levels(text: str) -> list:
+            return [m.group(1) for m in re.finditer(r"^(#+) ", text, re.MULTILINE)]
+
+        en = levels((PLUGIN_ROOT / "README.md").read_text())
+        zh = levels((PLUGIN_ROOT / "README.zh-CN.md").read_text())
+        self.assertEqual(en, zh, "README 双语标题层级序列不一致")
 
 
 if __name__ == "__main__":

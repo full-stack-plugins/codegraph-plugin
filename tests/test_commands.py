@@ -10,7 +10,7 @@
 - frontmatter 含 description
 - 不允许使用相对路径引用文件
 
-每个 .json 和同名 .md 的 description 必须语义等价.
+每个 .json 和同名 .md 的 description 必须各自存在且非空（跨语言语义等价机器不可判，靠人工核对）.
 """
 from __future__ import annotations
 
@@ -58,6 +58,21 @@ class TestCommandFiles(unittest.TestCase):
         json_names = {jf.stem for jf in self.jsons}
         md_names = {mf.stem for mf in self.mds}
         self.assertEqual(json_names, md_names, "JSON 与 MD 命令名集合必须完全相同")
+
+    def test_descriptions_present_in_both(self) -> None:
+        """每对同名命令: .json description 与 .md frontmatter description 都非空."""
+        desc_re = re.compile(r"^description:\s*(.+?)\s*$", re.MULTILINE)
+        for jf in self.jsons:
+            with self.subTest(command=jf.stem):
+                data = json.loads(jf.read_text(encoding="utf-8"))
+                self.assertGreater(len(data.get("description", "")), 4)
+                mf = KIMI_COMMANDS / f"{jf.stem}.md"
+                self.assertTrue(mf.exists(), f"{mf.name} 缺失")
+                parts = mf.read_text(encoding="utf-8").split("---", 2)
+                self.assertGreaterEqual(len(parts), 3, f"{mf.name} 缺 YAML frontmatter")
+                m = desc_re.search(parts[1])
+                self.assertIsNotNone(m, f"{mf.name} frontmatter 缺 description")
+                self.assertGreater(len(m.group(1).strip().strip("\"' ")), 4)
 
 
 class TestNoExternalVendoredCrossLinks(unittest.TestCase):

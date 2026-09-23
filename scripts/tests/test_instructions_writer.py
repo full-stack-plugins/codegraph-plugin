@@ -78,6 +78,13 @@ class TestMarkedSection(unittest.TestCase):
         self.assertIn(CODEGRAPH_SECTION_END, content)
         self.assertNotIn("OLD BODY", content)
 
+    def test_rejects_body_without_markers(self) -> None:
+        """裸 body（不含标记）必须抛 ValueError，防止重复追加污染."""
+        with self.assertRaises(ValueError):
+            replace_or_append_marked_section(
+                self.path, "裸文本", CODEGRAPH_SECTION_START, CODEGRAPH_SECTION_END
+            )
+
     def test_append_when_other_content_exists(self) -> None:
         """现有非空但无标记 → 追加在末尾"""
         existing = "# Project Notes\n\nsome user content\n"

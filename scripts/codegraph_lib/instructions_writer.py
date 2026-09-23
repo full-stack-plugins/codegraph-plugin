@@ -48,7 +48,12 @@ def replace_or_append_marked_section(
     - 区间不存在 → 'created'（新建文件，仅 body）或 'appended'（追加到现有内容后）
     - 区间存在且 byte-equal body → 'unchanged'（不写盘）
     - 区间存在但不等 → 'updated'（就地替换）
+
+    body 必须以 start_marker 开头、end_marker 结尾，否则抛 ValueError——
+    裸 body 会让下次运行找不到区间而重复追加。
     """
+    if not (body.startswith(start_marker) and body.endswith(end_marker)):
+        raise ValueError("body 必须以 start_marker 开头、end_marker 结尾")
     if file_path.exists():
         existing = file_path.read_text(encoding="utf-8")
     else:
