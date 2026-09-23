@@ -1,0 +1,49 @@
+{
+  "name": "codegraph",
+  "version": "0.1.1+codex.20260923",
+  "description": "Inject the official CodeGraph prompt at session start (only when a `.codegraph/` directory exists) and expose all 20 codegraph CLI commands as slash commands for Codex/ZCode/Kimi/Claude Code. Pure Python stdlib.",
+  "author": {
+    "name": "Full Stack Plugins",
+    "url": "https://github.com/full-stack-plugins"
+  },
+  "homepage": "https://github.com/full-stack-plugins/codegraph-plugin",
+  "repository": "https://github.com/full-stack-plugins/codegraph-plugin",
+  "license": "Apache-2.0",
+  "keywords": [
+    "code-intelligence",
+    "knowledge-graph",
+    "codegraph",
+    "mcp",
+    "code-search"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "CodeGraph",
+    "shortDescription": "Discoverable codegraph — official prompt + all CLI commands",
+    "longDescription": "Injects the official CodeGraph prompt at SessionStart (only when `.codegraph/` exists). Exposes all 20 codegraph CLI commands as slash commands. Pure Python stdlib.",
+    "developerName": "Full Stack Plugins",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Read"
+    ],
+    "privacyPolicyURL": "https://github.com/full-stack-plugins/codegraph-plugin/blob/main/PRIVACY.md",
+    "termsOfServiceURL": "https://github.com/full-stack-plugins/codegraph-plugin/blob/main/TERMS.md",
+    "defaultPrompt": [
+      "Index this repository with /codegraph-init so I can answer code questions via CodeGraph",
+      "Find callers of the function I just changed",
+      "Show me what would be affected if I change <symbol>",
+      "Run /codegraph-status so I can see if the index is stale"
+    ],
+    "defaultPromptZhCn": [
+      "用 /codegraph-init 索引此仓库，我就能通过 CodeGraph 回答代码问题",
+      "找出我刚改的那个函数的所有调用方",
+      "看看如果改 <symbol> 会影响哪些代码",
+      "跑一下 /codegraph-status，看索引是否过期"
+    ],
+    "brandColor": "#0F766E",
+    "composerIcon": "./assets/composer-icon.png",
+    "logo": "./assets/official-logo.png",
+    "logoDark": "./assets/official-logo.png",
+    "screenshots": []
+  }
+}

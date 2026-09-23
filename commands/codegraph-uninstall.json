@@ -1,0 +1,5 @@
+{
+  "name": "codegraph-uninstall",
+  "description": "从宿主代理移除 codegraph MCP wiring",
+  "prompt": "运行 /codegraph-uninstall。\n\n步骤：\n1. 确认 `codegraph` CLI 在 PATH。\n2. 运行 `codegraph uninstall` —— 移除 host 代理（Claude Code、Cursor、Codex CLI、opencode、Hermes Agent、Gemini、Antigravity、Kiro）的 MCP 配置。\n3. 报告每个宿主代理的移除结果。\n4. 可选 `--keep-cli`：保留 CLI 安装，仅移除 wiring。\n\n边界：\n- 仅移除 MCP wiring，不删 `.codegraph/` 项目索引（那是 /codegraph-uninit 的事）\n- 不读取项目源代码"
+}

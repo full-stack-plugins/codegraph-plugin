@@ -1,0 +1,15 @@
+CodeGraph Plugin
+Copyright 2026 Full Stack Plugins contributors
+
+This product includes software developed at
+Full Stack Plugins (https://github.com/full-stack-plugins).
+
+The official CodeGraph prompt block in `scripts/codegraph_lib/prompt.py`
+and `skills/codegraph-helper/references/instructions-block.md` is verbatim
+from the upstream `codegraph` project by Colby McHenry (MIT licensed):
+
+  https://github.com/colbymchenry/codegraph
+  Copyright (c) 2026 Colby McHenry
+
+The block was last synchronized with codegraph v1.5.0
+(`src/installer/instructions-template.ts:42-51`).

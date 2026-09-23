@@ -1,0 +1,5 @@
+{
+  "name": "codegraph-files",
+  "description": "查看项目文件结构（来自索引）",
+  "prompt": "运行 /codegraph-files。\n\n步骤：\n1. 解析路径参数；缺省则为 cwd。\n2. 运行 `codegraph files` —— 输出索引过的文件树（带语言 + 符号数），比 Glob 快一个数量级。\n3. 支持参数：--path（子目录前缀）、--pattern（glob）、--format（tree|flat|grouped，default tree）、--max-depth。\n\n替代工具：MCP 模式下调用 `codegraph_files(format)`。\n\n边界：\n- 只读，不修改文件\n- 不读取用户源代码到外部"
+}

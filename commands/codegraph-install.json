@@ -1,0 +1,5 @@
+{
+  "name": "codegraph-install",
+  "description": "一次性把 codegraph MCP server 接入宿主代理",
+  "prompt": "运行 /codegraph-install。\n\n步骤：\n1. 确认 `codegraph` CLI 在 PATH；不在则提示用户先安装（`npm i -g @colbymchenry/codegraph` 或 https://github.com/colbymchenry/codegraph 的 install.sh）。\n2. 运行 `codegraph install` —— 这是 host 代理（Claude Code、Cursor、Codex CLI、opencode、Hermes Agent、Gemini、Antigravity、Kiro）的 MCP 配置端点。\n3. 报告每个宿主代理的 wiring 结果。\n4. 不再询问「是否要启用 telemetry」之类的偏好——CLI 已有交互式提示，沿用它即可。\n\n边界：\n- 一次性操作，不需要每次会话都跑（除非 `codegraph upgrade` 提示需要 refresh）\n- 不写任何项目内文件\n- 不读取项目源代码"
+}

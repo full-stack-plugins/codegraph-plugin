@@ -1,0 +1,5 @@
+{
+  "name": "codegraph-telemetry",
+  "description": "查看或修改 codegraph 匿名遥测开关",
+  "prompt": "运行 /codegraph-telemetry。\n\n步骤：\n1. 确认 `codegraph` CLI 在 PATH。\n2. 解析用户提供的 action：status | on | off。缺省为 status。\n3. 运行 `codegraph telemetry <action>`。\n\n边界：\n- 不读取项目源代码\n- telemetry 是匿名使用统计；本插件默认不参与任何 telemetry 上报，也不修改用户的 telemetry 偏好（除非用户显式调用本命令）"
+}

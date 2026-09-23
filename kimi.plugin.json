@@ -1,0 +1,36 @@
+{
+  "name": "codegraph",
+  "version": "0.1.1",
+  "description": "Inject the official CodeGraph prompt at session start (only when a `.codegraph/` directory exists) and expose all 20 codegraph CLI commands as slash commands for Codex/ZCode/Kimi/Claude Code. Pure Python stdlib.",
+  "author": {
+    "name": "Full Stack Plugins",
+    "url": "https://github.com/full-stack-plugins"
+  },
+  "homepage": "https://github.com/full-stack-plugins/codegraph-plugin",
+  "repository": "https://github.com/full-stack-plugins/codegraph-plugin",
+  "license": "Apache-2.0",
+  "keywords": [
+    "code-intelligence",
+    "knowledge-graph",
+    "codegraph",
+    "mcp",
+    "code-search",
+    "claude-code",
+    "codex",
+    "kimi"
+  ],
+  "skills": "./skills/",
+  "commands": "./commands/",
+  "interface": {
+    "displayName": "CodeGraph",
+    "shortDescription": "Discoverable codegraph — official prompt + all CLI commands",
+    "longDescription": "For AI coding agents. At session start, when a `.codegraph/` directory exists, this plugin writes the official CodeGraph prompt block (verbatim from upstream `instructions-template.ts`) to `<cwd>/.claude/CLAUDE.md` or `<cwd>/AGENTS.md` using atomic marker-fenced replacement, and injects the same block as SessionStart additionalContext. All 20 codegraph CLI commands are exposed as slash commands. Pure Python stdlib; no third-party runtime dependencies."
+  },
+  "hooks": [
+    {
+      "event": "SessionStart",
+      "command": "python3 ./hooks/inject_codegraph_prompt.py",
+      "timeout": 10
+    }
+  ]
+}

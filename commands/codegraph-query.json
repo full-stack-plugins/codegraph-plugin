@@ -1,0 +1,5 @@
+{
+  "name": "codegraph-query",
+  "description": "按关键词搜索符号位置",
+  "prompt": "运行 /codegraph-query。\n\n步骤：\n1. 取用户提供的查询字符串（必填）。\n2. 解析路径参数；缺省则为 cwd。\n3. 运行 `codegraph query <query>` 输出匹配符号的位置（kind / file / line / signature）。\n\n替代工具：MCP 模式下调用 `codegraph_search(query, kind?, limit?)`。\n\n边界：\n- 只读，不修改文件\n- 不读取用户源代码（仅依赖 .codegraph/ 索引）"
+}

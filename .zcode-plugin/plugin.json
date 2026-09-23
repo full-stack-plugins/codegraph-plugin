@@ -1,0 +1,30 @@
+{
+  "name": "codegraph",
+  "displayName": "CodeGraph",
+  "displayName_i18n": {
+    "en": "CodeGraph",
+    "zh-CN": "CodeGraph 代码智能"
+  },
+  "version": "0.1.1",
+  "description": "Inject the official CodeGraph prompt at session start (only when a `.codegraph/` directory exists) and expose all 20 codegraph CLI commands as slash commands for Codex/ZCode/Kimi/Claude Code. Pure Python stdlib.",
+  "description_i18n": {
+    "en": "At SessionStart, when a `.codegraph/` directory exists, this plugin writes the official CodeGraph prompt block to `<cwd>/.claude/CLAUDE.md` or `<cwd>/AGENTS.md`, and injects the same block as SessionStart additionalContext. Exposes all 20 codegraph CLI commands as slash commands.",
+    "zh-CN": "在 SessionStart 时，当 `.codegraph/` 目录存在，本插件把官方 CodeGraph 提示词块写入 `<cwd>/.claude/CLAUDE.md`（不存在则 `<cwd>/AGENTS.md`），并通过 additionalContext 注入当前会话。同时把 codegraph 全量 20 个 CLI 命令暴露为 slash 命令。"
+  },
+  "author": {
+    "name": "Full Stack Plugins",
+    "url": "https://github.com/full-stack-plugins"
+  },
+  "homepage": "https://github.com/full-stack-plugins/codegraph-plugin",
+  "repository": "https://github.com/full-stack-plugins/codegraph-plugin",
+  "license": "Apache-2.0",
+  "keywords": [
+    "code-intelligence",
+    "knowledge-graph",
+    "codegraph",
+    "mcp",
+    "code-search"
+  ],
+  "skills": "skills",
+  "commands": "commands"
+}

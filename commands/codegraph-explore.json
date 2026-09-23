@@ -1,0 +1,5 @@
+{
+  "name": "codegraph-explore",
+  "description": "一次性探索多个符号的源码与调用路径",
+  "prompt": "运行 /codegraph-explore。\n\n步骤：\n1. 取用户查询字符串（必填；可以是 symbol 名、文件路径、或自然语言）。\n2. 解析路径参数；缺省则为 cwd。\n3. 运行 `codegraph explore <query>` —— 等价于 `codegraph_explore` MCP 工具。\n\n替代工具：MCP 模式下调用 `codegraph_explore(query, maxFiles)`。\n\n边界：\n- 这是 codegraph 的主入口；其他查询（callers/callees/impact/node）只在你明确知道要查什么时用\n- 不修改文件"
+}

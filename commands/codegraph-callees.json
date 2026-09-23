@@ -1,0 +1,5 @@
+{
+  "name": "codegraph-callees",
+  "description": "查找某符号调用的所有函数/方法",
+  "prompt": "运行 /codegraph-callees。\n\n步骤：\n1. 取用户提供的符号名（必填）。同名符号加 `--file <file>` 消歧。\n2. 解析路径参数；缺省则为 cwd。\n3. 运行 `codegraph callees <symbol>` 输出该符号调用的所有函数（含签名、文件、行号）。\n4. 可选 `--limit N`（default 20）。\n\n替代工具：MCP 模式下调用 `codegraph_callees(symbol, limit)`。\n\n边界：\n- 只读，不修改文件"
+}

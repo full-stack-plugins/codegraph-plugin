@@ -1,0 +1,5 @@
+{
+  "name": "codegraph-sync",
+  "description": "增量同步 CodeGraph 索引",
+  "prompt": "运行 /codegraph-sync。\n\n步骤：\n1. 解析路径参数；缺省则为 cwd。\n2. 确认 `<path>/.codegraph/` 存在；否则先 /codegraph-init。\n3. 运行 `codegraph sync <path>` —— 增量同步，自上次 sync 以来变更的文件。\n4. 报告：filesAdded / filesModified / filesRemoved / durationMs。\n\n说明：\n- 默认 watcher 模式会自动同步（无需手动调用），仅在 watcher degraded 或临时关闭时手动跑\n- 不阻塞后续命令"
+}

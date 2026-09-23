@@ -1,0 +1,5 @@
+{
+  "name": "codegraph-affected",
+  "description": "查找受某文件变更影响的测试文件",
+  "prompt": "运行 /codegraph-affected。\n\n步骤：\n1. 解析文件参数；缺省则用 `git diff` 当前 unstaged/staged 改动文件。\n2. 运行 `codegraph affected [files...]` —— BFS 通过 dependents，仅返回测试文件模式匹配的项。\n3. 报告受影响测试文件路径，便于跑测试时精准圈定。\n\n替代工具：MCP 模式下对应 `codegraph affected [files]`。\n\n边界：\n- 只读，不修改文件\n- 适用于「改完 X，跑哪几个测试」的常见工作流"
+}

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 320" width="1280" height="320">
+  <defs>
+    <linearGradient id="banner-bg" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#0F766E"/>
+      <stop offset="100%" stop-color="#134E4A"/>
+    </linearGradient>
+  </defs>
+  <rect width="1280" height="320" fill="url(#banner-bg)"/>
+  <g transform="translate(80 80)" fill="none" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" opacity="0.95">
+    <circle cx="80" cy="80" r="72"/>
+    <circle cx="80" cy="80" r="36"/>
+    <circle cx="80" cy="80" r="12" fill="#FFFFFF" stroke="none"/>
+    <line x1="80" y1="14" x2="80" y2="42"/>
+    <line x1="80" y1="118" x2="80" y2="146"/>
+    <line x1="14" y1="80" x2="42" y2="80"/>
+    <line x1="118" y1="80" x2="146" y2="80"/>
+  </g>
+  <text x="320" y="150" font-family="-apple-system,Segoe UI,sans-serif" font-size="56" font-weight="700" fill="#FFFFFF">CodeGraph Plugin</text>
+  <text x="320" y="200" font-family="-apple-system,Segoe UI,sans-serif" font-size="22" fill="#A7F3D0">Discoverable codegraph — official prompt + all 20 CLI commands</text>
+  <text x="320" y="240" font-family="-apple-system,Segoe UI,sans-serif" font-size="18" fill="#A7F3D0" opacity="0.85">For Codex · ZCode · Kimi · Claude Code</text>
+</svg>

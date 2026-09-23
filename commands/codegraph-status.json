@@ -1,0 +1,5 @@
+{
+  "name": "codegraph-status",
+  "description": "查看 CodeGraph 索引状态与统计",
+  "prompt": "运行 /codegraph-status。\n\n步骤：\n1. 解析路径参数；缺省则为 cwd。\n2. 确认 `codegraph` CLI 在 PATH。\n3. 运行 `codegraph status <path>`，输出全部可见字段：\n   - index_state（complete | partial | failed | indexing）\n   - indexed_with_version / indexed_with_extraction_version（陈旧时提示 re-index）\n   - files / nodes / edges\n   - DB size / WAL size\n   - 当前 backend / journal mode\n   - detected frameworks\n   - 是否有 pending reference\n4. 若 index_state 不是 `complete`，明确告知用户是否需要 re-index。\n\n边界：\n- 只读，不修改任何文件\n- 不读取用户源代码"
+}

@@ -1,0 +1,5 @@
+{
+  "name": "codegraph-upgrade",
+  "description": "升级 codegraph CLI 到最新版本",
+  "prompt": "运行 /codegraph-upgrade。\n\n步骤：\n1. 解析可选的版本参数（缺省升级到 latest）。\n2. 确认 `codegraph` CLI 在 PATH。\n3. 运行 `codegraph upgrade [version]`。\n4. 升级完成后提示用户：本插件的提示词文本与 codegraph vX.Y.Z 同步；若上游 instructions-template.ts 变更，请检查 `scripts/codegraph_lib/prompt.py` 是否需要重新同步（参见 AGENTS.md 纪律）。\n\n边界：\n- 不修改本插件自身；升级的是上游 codegraph CLI\n- 若升级后上游提示词文本漂移，需手动同步本插件的 `prompt.py` 并 bump patch 版本"
+}
