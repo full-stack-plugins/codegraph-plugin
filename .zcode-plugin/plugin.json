@@ -5,7 +5,7 @@
     "en": "CodeGraph",
     "zh-CN": "CodeGraph 代码智能"
   },
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Inject the official CodeGraph prompt at session start (only when a `.codegraph/` directory exists) and expose all 20 codegraph CLI commands as slash commands for Codex/ZCode/Kimi/Claude Code. Pure Python stdlib.",
   "description_i18n": {
     "en": "At SessionStart, when a `.codegraph/` directory exists, this plugin writes the official CodeGraph prompt block to `<cwd>/.claude/CLAUDE.md` or `<cwd>/AGENTS.md`, and injects the same block as SessionStart additionalContext. Exposes all 20 codegraph CLI commands as slash commands.",
@@ -26,5 +26,11 @@
     "code-search"
   ],
   "skills": "skills",
-  "commands": "commands"
+  "commands": "commands",
+  "defaultPromptZhCn": [
+    "用 /codegraph-init 索引此仓库，我就能通过 CodeGraph 回答代码问题",
+    "找出我刚改的那个函数的所有调用方",
+    "看看如果改 <symbol> 会影响哪些代码",
+    "跑一下 /codegraph-status，看索引是否过期"
+  ]
 }
