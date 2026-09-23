@@ -66,7 +66,14 @@ class TestNoExternalVendoredCrossLinks(unittest.TestCase):
     def test_no_dotdot_relative_links(self) -> None:
         link_re = re.compile(r"\[([^\]]+)\]\((\.\.?/[^)]+)\)")
         offenders = []
-        for md in list(COMMANDS.glob("*.md")) + list(COMMANDS.glob("*.json")):
+        # commands/（Kimi .json）与 kimi-commands/（Codex .md）都必须覆盖
+        targets = (
+            list(COMMANDS.glob("*.md"))
+            + list(COMMANDS.glob("*.json"))
+            + list(KIMI_COMMANDS.glob("*.md"))
+            + list(KIMI_COMMANDS.glob("*.json"))
+        )
+        for md in sorted(targets):
             text = md.read_text(encoding="utf-8")
             for m in link_re.finditer(text):
                 offenders.append((md.name, m.group(1), m.group(2)))

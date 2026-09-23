@@ -11,9 +11,9 @@
 
 ## 版本
 
-- 当前: v0.1.0
+- 当前: v0.1.3
 - 同步自 codegraph v1.5.0 的 `instructions-template.ts`
-- Codex 后缀: `0.1.0+codex.YYYYMMDD`
+- Codex 后缀: `<version>+codex.YYYYMMDD`
 
 ## 同步自上游
 

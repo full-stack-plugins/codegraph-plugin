@@ -152,9 +152,18 @@ const codexManifest = path.join(repoDir, ".codex-plugin/plugin.json");
 fs.writeFileSync(codexManifest, bumpCodex(fs.readFileSync(codexManifest, "utf8")));
 
 // 3) 重新生成三平台清单 + 全量校验
+// sync 的写盘动作发生在其 process.exit(1) 之前——失败时写盘多半已完成。
+// 不让 sync 失败中断发版（manifest 已写盘），只告警并给出手动重跑命令。
 const pluginFilter = `--plugin=${pluginId}`;
-execFileSync(process.execPath, [path.join(root, "scripts/sync-marketplaces.mjs"), "--write", pluginFilter], { stdio: "inherit" });
-execFileSync(process.execPath, [path.join(root, "scripts/sync-marketplaces.mjs"), pluginFilter], { stdio: "inherit" });
+const syncScript = path.join(root, "scripts/sync-marketplaces.mjs");
+for (const args of [["--write", pluginFilter], [pluginFilter]]) {
+  try {
+    execFileSync(process.execPath, [syncScript, ...args], { stdio: "inherit" });
+  } catch (e) {
+    console.warn(`\u26a0\ufe0f sync-marketplaces ${args.join(" ")} \u5931\u8d25: ${e.message}`);
+    console.warn(`   \u53d1\u7248\u6587\u4ef6\u5df2\u5199\u76d8\uff1b\u8bf7\u624b\u52a8\u91cd\u8dd1: node ${syncScript} ${args.join(" ")}`);
+  }
+}
 
 // 4) 提交提示
 console.log(`

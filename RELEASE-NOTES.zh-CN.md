@@ -1,9 +1,20 @@
-# codegraph-plugin v0.1.0 — Release Notes
+# codegraph-plugin — Release Notes
 
 **Released**: 2026-09-23
 **Repository**: [full-stack-plugins/codegraph-plugin](https://github.com/full-stack-plugins/codegraph-plugin)
 **License**: Apache-2.0
-**Plugin ID**: `codegraph` · **Version**: 0.1.0
+**Plugin ID**: `codegraph` · **Version**: 0.1.3
+
+---
+
+## Release history
+
+| Version | Date | Changes |
+|---|---|---|
+| 0.1.3 | 2026-09-23 | 修复 `bump-plugin.mjs` sync 失败处理（写盘后不再中断）；跨 skill 链接检查覆盖 `kimi-commands/*.md`；`scripts/tests/` 可被 discover；版本面同步 |
+| 0.1.2 | 2026-09-23 | `.zcode-plugin` 增加 `defaultPromptZhCn`；修正 OpenSpec delta 头 |
+| 0.1.1 | 2026-09-23 | 首次 `bump-plugin.mjs` 发版（4 manifest + catalog + 3 市场清单） |
+| 0.1.0 | 2026-09-23 | 初始发布（见下文） |
 
 ---
 
@@ -43,9 +54,9 @@ What this plugin adds on top of `codegraph install` alone:
 The plugin is shipped as a single command on the host:
 
 ```bash
-# Codex / ZCode / Kimi marketplace install (auto-discovery of marketplace v0.1.0):
+# Codex / ZCode / Kimi marketplace install (auto-discovery of marketplace (latest)):
 codex plugin add codegraph@full-stack-plugins
-zcode plugin install codegraph --ref v0.1.0
+zcode plugin install codegraph --ref v0.1.3
 ```
 
 After install, **in any indexed project** (`./codegraph/` exists), start a new session — the plugin auto-injects the official prompt.
@@ -148,7 +159,7 @@ cd /Users/wandl/workspaces/workspace-agent-skills/full-stack-plugins-repositorie
 
 ## Files shipped
 
-73 files, 23 unit tests (all passing):
+73 files, 36 unit tests (all passing):
 
 - 1 skill manifest (`skills/codegraph-helper/SKILL.md` + 2 references)
 - 20 Kimi slash commands (`commands/codegraph-*.json`)
