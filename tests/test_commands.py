@@ -20,14 +20,14 @@ import unittest
 from pathlib import Path
 
 PLUGIN_ROOT = Path(__file__).resolve().parents[1]
-COMMANDS = PLUGIN_ROOT / "commands"
-KIMI_COMMANDS = PLUGIN_ROOT / "kimi-commands"
+COMMANDS = PLUGIN_ROOT / "commands"  # JSON 格式命令
+MD_COMMANDS = PLUGIN_ROOT / "kimi-commands"
 
 
 class TestCommandFiles(unittest.TestCase):
     def setUp(self) -> None:
         self.jsons = sorted(COMMANDS.glob("*.json"))
-        self.mds = sorted(KIMI_COMMANDS.glob("*.md"))
+        self.mds = sorted(MD_COMMANDS.glob("*.md"))
 
     def test_count(self) -> None:
         self.assertEqual(len(self.jsons), 20, f"expected 20 .json, got {len(self.jsons)}")
@@ -66,7 +66,7 @@ class TestCommandFiles(unittest.TestCase):
             with self.subTest(command=jf.stem):
                 data = json.loads(jf.read_text(encoding="utf-8"))
                 self.assertGreater(len(data.get("description", "")), 4)
-                mf = KIMI_COMMANDS / f"{jf.stem}.md"
+                mf = MD_COMMANDS / f"{jf.stem}.md"
                 self.assertTrue(mf.exists(), f"{mf.name} 缺失")
                 parts = mf.read_text(encoding="utf-8").split("---", 2)
                 self.assertGreaterEqual(len(parts), 3, f"{mf.name} 缺 YAML frontmatter")
@@ -81,12 +81,12 @@ class TestNoExternalVendoredCrossLinks(unittest.TestCase):
     def test_no_dotdot_relative_links(self) -> None:
         link_re = re.compile(r"\[([^\]]+)\]\((\.\.?/[^)]+)\)")
         offenders = []
-        # commands/（Kimi .json）与 kimi-commands/（Codex .md）都必须覆盖
+        # commands/（JSON）与 kimi-commands/（Markdown）都必须覆盖
         targets = (
             list(COMMANDS.glob("*.md"))
             + list(COMMANDS.glob("*.json"))
-            + list(KIMI_COMMANDS.glob("*.md"))
-            + list(KIMI_COMMANDS.glob("*.json"))
+            + list(MD_COMMANDS.glob("*.md"))
+            + list(MD_COMMANDS.glob("*.json"))
         )
         for md in sorted(targets):
             text = md.read_text(encoding="utf-8")

@@ -11,7 +11,7 @@
 
 ## 版本
 
-- 当前: v0.1.4
+- 当前: v0.1.5
 - 同步自 codegraph v1.5.0 的 `instructions-template.ts`
 - Codex 后缀: `<version>+codex.YYYYMMDD`
 
@@ -22,6 +22,12 @@
   2. 若文本漂移，更新 `prompt.py` 并 bump patch 版本
   3. CHANGELOG 记录「prompt 文本与 codegraph vX.Y.Z 同步」
 - 不要把上游 `codegraph` 代码 vendor 进本插件；本插件只调度其 CLI。
+
+## 命令目录归属（2026-09-23 生态对照结论）
+
+- `commands/*.json`：JSON 格式命令，由 `kimi.plugin.json` 的 `commands` 字段声明。
+- `kimi-commands/*.md`：Markdown 格式命令。**目录名不改**——`kimi-commands/` 是生态约定名（flowguard-plugin 的 `kimi.plugin.json` 即指向 `./kimi-commands/`）。
+- **不要**在文档中断言「`.json` 归 Kimi、`.md` 归 Codex」——实测生态内 .md 归属自相矛盾（flowguard 的 .md 用 `KIMI_PLUGIN_ROOT` 归 Kimi；bt/processon 的 `commands/*.md` 带 `argument-hint`/`skills:` frontmatter）。归属待实机验证，文档一律用中性表述「JSON 格式 / Markdown 格式」。
 
 ## 不做的事
 

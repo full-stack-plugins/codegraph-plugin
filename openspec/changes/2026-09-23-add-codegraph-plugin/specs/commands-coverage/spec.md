@@ -2,7 +2,7 @@
 
 ### Requirement: Slash Command Coverage
 
-The plugin SHALL expose 20 slash commands covering all visible codegraph CLI subcommands, in two formats each: Kimi/ZCode host reads commands/codegraph-<verb>.json; Codex host reads kimi-commands/codegraph-<verb>.md.
+The plugin SHALL expose 20 slash commands covering all visible codegraph CLI subcommands, in two formats each: commands/codegraph-<verb>.json (JSON format, declared in `kimi.plugin.json`) and kimi-commands/codegraph-<verb>.md (Markdown format) shall both exist per verb.
 
 #### Scenario: 全部命令成对存在
 

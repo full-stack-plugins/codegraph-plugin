@@ -3,7 +3,7 @@
 **Released**: 2026-09-23
 **Repository**: [full-stack-plugins/codegraph-plugin](https://github.com/full-stack-plugins/codegraph-plugin)
 **License**: Apache-2.0
-**Plugin ID**: `codegraph` · **Version**: 0.1.4
+**Plugin ID**: `codegraph` · **Version**: 0.1.5
 
 > **Localization**: This file is the English release notes. The Chinese version is in [RELEASE-NOTES.zh-CN.md](RELEASE-NOTES.zh-CN.md).
 
@@ -13,6 +13,7 @@
 
 | Version | Date | Changes |
 |---|---|---|
+| 0.1.5 | 2026-09-23 | Fix format-attribution claims (JSON/Markdown neutral wording, ecosystem-verified); rename `KIMI_COMMANDS` test variable; document command-directory convention in AGENTS.md |
 | 0.1.4 | 2026-09-23 | Add bump-plugin CLI tests (untested-hotspot closure); description parity check for all 40 command files; README heading-structure parity test; marker-containment guard in `replace_or_append_marked_section` |
 | 0.1.3 | 2026-09-23 | Fix `bump-plugin.mjs` sync failure handling (no longer aborts post-write); extend cross-link lint to cover `kimi-commands/*.md`; make `scripts/tests/` discoverable; sync version surfaces |
 | 0.1.2 | 2026-09-23 | Add `defaultPromptZhCn` to ZCode manifest; fix OpenSpec delta headers |
@@ -33,7 +34,7 @@ Initial release of **codegraph-plugin** — a thin orchestration layer on top of
 
   No user action required. The plugin is silent in non-indexed projects.
 
-- **20 slash commands**: complete coverage of all visible `codegraph` CLI subcommands — `init`, `uninit`, `install`, `uninstall`, `index`, `sync`, `status`, `query`, `explore`, `node`, `files`, `callers`, `callees`, `impact`, `affected`, `daemon`, `unlock`, `version`, `telemetry`, `upgrade` — in both Kimi (`commands/*.json`) and Codex (`kimi-commands/*.md`) formats. Hidden commands (`prompt-hook`, `serve --mcp`) are intentionally not exposed.
+- **20 slash commands**: complete coverage of all visible `codegraph` CLI subcommands — `init`, `uninit`, `install`, `uninstall`, `index`, `sync`, `status`, `query`, `explore`, `node`, `files`, `callers`, `callees`, `impact`, `affected`, `daemon`, `unlock`, `version`, `telemetry`, `upgrade` — in two formats — JSON (`commands/*.json`, declared in `kimi.plugin.json`) and Markdown (`kimi-commands/*.md`). Hidden commands (`prompt-hook`, `serve --mcp`) are intentionally not exposed.
 
 - **One plugin-local skill** (`codegraph-helper`): conditions the agent to prefer CodeGraph's MCP tools (`codegraph_explore`, `codegraph_callers`, `codegraph_callees`, `codegraph_impact`, etc.) when answering code-structure questions in indexed repositories.
 
@@ -59,7 +60,7 @@ The plugin is shipped as a single command on the host:
 ```bash
 # Codex / ZCode / Kimi marketplace install (auto-discovers marketplace (latest)):
 codex plugin add codegraph@full-stack-plugins
-zcode plugin install codegraph --ref v0.1.4
+zcode plugin install codegraph --ref v0.1.5
 ```
 
 After install, **in any indexed project** (`./codegraph/` exists), start a new session — the plugin auto-injects the official prompt.
@@ -162,16 +163,16 @@ cd /Users/wandl/workspaces/workspace-agent-skills/full-stack-plugins-repositorie
 
 ## Files shipped
 
-75 files, 42 unit tests (all passing):
+86 files, 42 unit tests (all passing):
 
 - 1 skill manifest (`skills/codegraph-helper/SKILL.md` + 2 references)
-- 20 Kimi slash commands (`commands/codegraph-*.json`)
-- 20 Codex slash commands (`kimi-commands/codegraph-*.md`)
+- 20 JSON slash commands (`commands/codegraph-*.json`, declared in `kimi.plugin.json`)
+- 20 Markdown slash commands (`kimi-commands/codegraph-*.md`)
 - 4 host manifests (`kimi.plugin.json`, `.codex-plugin/plugin.json`, `.zcode-plugin/plugin.json`, `.agents/plugins/marketplace.json`)
 - 3 SVG assets (logo, composer icon, banner) + 3 PNG equivalents
 - 1 hook (`hooks/inject_codegraph_prompt.py`) + manifest (`hooks/hooks.json`)
 - 4 Python library modules (`scripts/codegraph_lib/`)
-- 4 test files (`tests/`)
+- 5 test files (`tests/` + `scripts/tests/`)
 - 3 docs (`docs/codegraph-architecture.{md,zh_CN.md}`, `docs/codegraph-plugin-design.md`)
 - 1 OpenSpec change (`openspec/changes/2026-09-23-add-codegraph-plugin/`)
 - Standard plugin metadata: `LICENSE`, `NOTICE`, `PRIVACY.md`, `TERMS.md`, `README.md`, `README.zh-CN.md`, `AGENTS.md`

@@ -15,7 +15,7 @@
 1. **会话启动时**，当 `<cwd>/.codegraph/` 存在时，把官方 CodeGraph 提示词块（verbatim 同步自上游 `codegraph/src/installer/instructions-template.ts`）注入到：
    - 当前会话，通过 `SessionStart.additionalContext` JSON 输出；
    - `<cwd>/.claude/CLAUDE.md`（如果存在）；否则 `<cwd>/AGENTS.md`。使用标记区间原子替换——字节级幂等，所以与 `codegraph install` 并存是安全的。
-2. **暴露 codegraph 全量 20 个 CLI 命令**为 slash 命令，Kimi（`.json`）与 Codex（`.md`）双格式，包括 4 个隐藏但实用的维护命令（`daemon` / `unlock` / `version` / `telemetry`）。
+2. **暴露 codegraph 全量 20 个 CLI 命令**为 slash 命令，JSON（`commands/*.json`，由 `kimi.plugin.json` 声明）与 Markdown（`kimi-commands/*.md`）双格式，包括 4 个隐藏但实用的维护命令（`daemon` / `unlock` / `version` / `telemetry`）。
 3. **注册发现型技能**（`codegraph-helper`），让智能体根据用户问题选择合适的 CodeGraph MCP 工具。
 
 ## 本插件**不**做什么

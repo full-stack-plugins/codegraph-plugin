@@ -12,9 +12,9 @@
                   ▼                               ▼
    ┌──────────────────────────┐    ┌──────────────────────────┐
    │ hooks/inject_codegraph_  │    │ commands/codegraph-*.   │
-   │ prompt.py                │    │ json (Kimi)             │
+   │ prompt.py                │    │ json (JSON 格式)             │
    │ (SessionStart 钩子)      │    │ kimi-commands/          │
-   │                          │    │ codegraph-*.md (Codex)  │
+   │                          │    │ codegraph-*.md (MD 格式)  │
    └─────────┬────────────────┘    └────────────┬─────────────┘
              │                                │
              ▼                                ▼

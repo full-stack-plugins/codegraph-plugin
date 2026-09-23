@@ -11,7 +11,7 @@ Three things, and **only** these three:
 1. **At session start**, when `<cwd>/.codegraph/` exists, this plugin injects the official CodeGraph prompt block (verbatim from upstream `codegraph/src/installer/instructions-template.ts`) into:
    - The current session, via `SessionStart.additionalContext` JSON output.
    - `<cwd>/.claude/CLAUDE.md` if it exists; else `<cwd>/AGENTS.md`. Uses atomic, marker-fenced section replacement — byte-equal content is a no-op, so this is safe to run alongside `codegraph install`.
-2. **Exposes all 20 codegraph CLI commands** as slash commands, in both Kimi (`.json`) and Codex (`.md`) formats, including the four hidden-but-useful maintenance commands (`daemon`, `unlock`, `version`, `telemetry`).
+2. **Exposes all 20 codegraph CLI commands** as slash commands in two formats: JSON (`commands/*.json`, declared in `kimi.plugin.json`) and Markdown (`kimi-commands/*.md`), including the four hidden-but-useful maintenance commands (`daemon`, `unlock`, `version`, `telemetry`).
 3. **Registers a discovery skill** (`codegraph-helper`) that conditions the agent to use the right CodeGraph MCP tool for the task at hand.
 
 ## What this plugin does **not** do

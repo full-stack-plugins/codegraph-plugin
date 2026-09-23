@@ -1,6 +1,6 @@
 {
   "name": "codegraph",
-  "version": "0.1.4+codex.20260923",
+  "version": "0.1.5+codex.20260924",
   "description": "Inject the official CodeGraph prompt at session start (only when a `.codegraph/` directory exists) and expose all 20 codegraph CLI commands as slash commands for Codex/ZCode/Kimi/Claude Code. Pure Python stdlib.",
   "author": {
     "name": "Full Stack Plugins",
