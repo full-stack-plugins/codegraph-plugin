@@ -1,0 +1,5 @@
+{
+  "name": "codegraph-node",
+  "description": "查看单个符号或单个文件的源码与调用链",
+  "prompt": "运行 /codegraph-node。\n\n步骤：\n1. 取用户提供的名字（必填；可以是符号名或文件路径）。\n2. 解析路径参数；缺省则为 cwd。\n3. 运行 `codegraph node <name>`。两种模式：\n   - 传符号名：返回位置、签名、源码（含行号）+ caller/callee trail。\n   - 传文件路径：返回文件源码（含行号）+ 依赖它的文件清单。\n\n替代工具：MCP 模式下调用 `codegraph_node(symbol, includeCode)` 或 `codegraph_node(file)`。\n\n边界：\n- 不修改文件\n- 优先用符号名；只有用户明确想读整个文件时才传路径"
+}

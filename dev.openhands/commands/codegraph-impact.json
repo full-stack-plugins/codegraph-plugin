@@ -1,0 +1,5 @@
+{
+  "name": "codegraph-impact",
+  "description": "修改某符号会影响哪些代码（重构前必跑）",
+  "prompt": "运行 /codegraph-impact。\n\n步骤：\n1. 取用户提供的符号名（必填）。同名符号加 `--file <file>` 消歧。\n2. 解析路径参数；缺省则为 cwd。\n3. 运行 `codegraph impact <symbol>` 输出受影响的所有符号（含 transitive 深度，default depth=2）。\n4. 可选 `--depth N` 控制传递深度。\n\n替代工具：MCP 模式下调用 `codegraph_impact(symbol, depth)`。\n\n边界：\n- 只读，不修改文件\n- 重构前必跑，但 0 影响不等于「安全」—— 还要看 dynamic dispatch、运行时多态、配置驱动的分支"
+}

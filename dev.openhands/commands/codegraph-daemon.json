@@ -1,0 +1,5 @@
+{
+  "name": "codegraph-daemon",
+  "description": "管理 codegraph 后台守护进程",
+  "prompt": "运行 /codegraph-daemon。\n\n步骤：\n1. 解析路径参数；缺省则为 cwd。\n2. 确认 `codegraph` CLI 在 PATH。\n3. 运行 `codegraph daemon` —— 交互式列出正在运行的 codegraph 后台守护进程（用于停止 / 重启）。\n\n边界：\n- 不会自动选 daemon 操作；交互让用户按 enter 选\n- 不修改项目源代码"
+}

@@ -1,0 +1,5 @@
+{
+  "name": "codegraph-version",
+  "description": "打印已安装的 codegraph 版本",
+  "prompt": "运行 /codegraph-version。\n\n步骤：\n1. 确认 `codegraph` CLI 在 PATH。\n2. 运行 `codegraph version`（亦可用 `codegraph -v` 或 `codegraph --version`）。\n3. 报告版本字符串。\n\n边界：\n- 不修改文件\n- 仅做版本探测；升级用 /codegraph-upgrade"
+}

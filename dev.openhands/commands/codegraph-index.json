@@ -1,0 +1,5 @@
+{
+  "name": "codegraph-index",
+  "description": "从头重建 CodeGraph 全量索引",
+  "prompt": "运行 /codegraph-index。\n\n步骤：\n1. 解析路径参数；缺省则为 cwd。\n2. 确认 `<path>/.codegraph/` 存在（已初始化）；否则先提示用户跑 /codegraph-init。\n3. 运行 `codegraph index <path>` —— 同 fresh init 的语义（先 discard `.codegraph/codegraph.db` + sidecars 再 re-index）。\n4. 报告：filesIndexed / filesSkipped / filesErrored / durationMs / nodesCreated / edgesCreated / index_state（complete|partial|failed|indexing）。\n\n边界：\n- 比 run 全量 scoped sync 更慢，仅在 watch 模式关闭、index_state=partial、extraction 升级时跑\n- 不读取用户源代码到外部"
+}

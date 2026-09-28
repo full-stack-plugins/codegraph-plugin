@@ -57,13 +57,17 @@ class TestBumpPluginCli(unittest.TestCase):
         self.assertIn("没有插件", proc.stderr)
 
     def test_dry_run_plan_shape(self) -> None:
-        """--dry-run 输出发版计划: 版本递增 + 5 处编辑清单，且不写盘."""
+        """--dry-run 输出发版计划: 版本递增 + 6 处编辑清单，且不写盘.
+
+        第 6 处是根 plugin.json（portable manifest）：bump-plugin 在该文件存在时
+        自动纳入同步面（scripts/bump-plugin.mjs 的 plainManifestRels）。
+        """
         proc = self.run_cli("codegraph", "patch", "--dry-run")
         self.assertEqual(proc.returncode, 0, proc.stderr)
         self.assertRegex(proc.stdout, r"codegraph \d+\.\d+\.\d+ -> \d+\.\d+\.\d+")
         self.assertIn("dry-run", proc.stdout)
         edit_lines = [ln for ln in proc.stdout.splitlines() if ln.startswith("  - ")]
-        self.assertEqual(len(edit_lines), 5, f"应有 5 处编辑计划: {edit_lines}")
+        self.assertEqual(len(edit_lines), 6, f"应有 6 处编辑计划: {edit_lines}")
 
 
 if __name__ == "__main__":

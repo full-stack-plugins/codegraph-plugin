@@ -1,0 +1,5 @@
+{
+  "name": "codegraph-init",
+  "description": "在当前项目初始化 CodeGraph 索引",
+  "prompt": "运行 /codegraph-init。\n\n步骤：\n1. 确认 `codegraph` CLI 在 PATH（`command -v codegraph`）；不在则提示用户先运行 /codegraph-install。\n2. 解析用户提供的路径参数；缺省则为 cwd。在项目根运行 `codegraph init <path>` 构建初始索引。\n3. 报告索引状态：files / nodes / edges / languages / 当前后端 / journal mode。\n4. 输出 `codegraph status <path>` 的全部可见字段，便于用户审查。\n\n边界：\n- 不修改 .gitignore\n- 不在 vendored skill 目录创建或修改文件\n- 不读取或上传任何源代码\n- 不阻塞后续命令（即使 init 部分失败）"
+}

@@ -1,0 +1,5 @@
+{
+  "name": "codegraph-unlock",
+  "description": "移除阻塞索引的陈旧锁文件",
+  "prompt": "运行 /codegraph-unlock。\n\n步骤：\n1. 解析路径参数；缺省则为 cwd。\n2. 确认 `codegraph` CLI 在 PATH。\n3. 运行 `codegraph unlock <path>` —— 移除 `.codegraph/codegraph.lock` 陈旧文件。\n4. 报告被移除的锁文件路径。\n\n边界：\n- 仅在 CLI/MCP/watch 同时报告「lock is held by another process」时使用\n- 不读取用户源代码"
+}
