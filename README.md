@@ -87,7 +87,7 @@ Check `<cwd>/.codegraph/` exists?
               with the full CodeGraph prompt block
 ```
 
-All exceptions fail-open (exit 0) — the host agent never sees a SessionStart error from this plugin.
+The reminder launcher tries `python`, then `python3`, with UTF-8 enabled. If neither interpreter starts, it exits 0. Library-loading and injection errors also fail open; failure to write the instruction file still permits session-context injection. Host-enforced timeouts or process termination remain outside this guarantee.
 
 ## Coexistence with `codegraph install`
 

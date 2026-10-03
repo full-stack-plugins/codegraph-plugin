@@ -91,7 +91,7 @@
               内容为完整 CodeGraph 提示词块
 ```
 
-所有异常都 fail-open（exit 0）——宿主代理不会看到本插件的任何 SessionStart 错误。
+提醒启动器依次尝试 `python`、`python3`，并开启 UTF-8；两个解释器都不能启动时仍 exit 0。库加载与注入异常同样 fail-open，指令文件写入失败仍继续注入会话提醒。宿主强制超时或终止进程不在此保证范围内。
 
 ## 与 `codegraph install` 的共存
 

@@ -1,6 +1,6 @@
 {
   "name": "codegraph",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Inject the official CodeGraph prompt at session start (only when a `.codegraph/` directory exists) and expose all 20 codegraph CLI commands as slash commands for Codex/ZCode/Kimi/Claude Code. Pure Python stdlib.",
   "author": {
     "name": "Full Stack Plugins",
@@ -29,7 +29,7 @@
   "hooks": [
     {
       "event": "SessionStart",
-      "command": "python3 ./hooks/inject_codegraph_prompt.py",
+      "command": "python -X utf8 ./hooks/inject_codegraph_prompt.py || python3 -X utf8 ./hooks/inject_codegraph_prompt.py || exit 0",
       "timeout": 10
     }
   ]

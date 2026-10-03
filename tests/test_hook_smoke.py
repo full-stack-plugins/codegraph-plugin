@@ -8,6 +8,8 @@
 from __future__ import annotations
 
 import json
+import os
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -32,6 +34,58 @@ def run_hook(cwd: Path, payload: dict | None = None) -> tuple[int, str, str]:
 
 
 class TestSessionStart(unittest.TestCase):
+    def test_configured_command_uses_available_python(self) -> None:
+        """真实宿主命令在 Windows 的 python3 占位程序环境中仍注入提醒。"""
+        config = json.loads((PLUGIN_ROOT / "hooks" / "hooks.json").read_text(encoding="utf-8"))
+        command = config["hooks"]["SessionStart"][0]["hooks"][0]["command"]
+        command = command.replace("${CLAUDE_PLUGIN_ROOT}", str(PLUGIN_ROOT))
+        with tempfile.TemporaryDirectory() as tmp:
+            cwd = Path(tmp)
+            (cwd / ".codegraph").mkdir()
+            proc = subprocess.run(command, shell=True, input=json.dumps({"cwd": tmp}),
+                                  capture_output=True, encoding="utf-8", cwd=tmp, timeout=10)
+            self.assertEqual(proc.returncode, 0, proc.stderr)
+            self.assertIn("additionalContext", json.loads(proc.stdout)["hookSpecificOutput"])
+
+    def test_configured_commands_succeed_without_python(self) -> None:
+        """缺少两个解释器时，提醒启动器仍成功退出，不阻断宿主。"""
+        config = json.loads((PLUGIN_ROOT / "hooks" / "hooks.json").read_text(encoding="utf-8"))
+        kimi = json.loads((PLUGIN_ROOT / "kimi.plugin.json").read_text(encoding="utf-8"))
+        commands = [config["hooks"]["SessionStart"][0]["hooks"][0]["command"], kimi["hooks"][0]["command"]]
+        with tempfile.TemporaryDirectory() as tmp:
+            env = dict(os.environ, PATH=tmp)
+            for command in commands:
+                with self.subTest(command=command):
+                    command = command.replace("${CLAUDE_PLUGIN_ROOT}", str(PLUGIN_ROOT))
+                    proc = subprocess.run(command, shell=True, input="{}", capture_output=True,
+                                          encoding="utf-8", env=env, cwd=tmp, timeout=10)
+                    self.assertEqual(proc.returncode, 0, proc.stderr)
+                    self.assertEqual(proc.stdout, "")
+
+    def test_missing_library_still_exits_successfully(self) -> None:
+        """安装包库缺失时也必须成功退出，而不是在 main 前抛出导入异常。"""
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "hooks").mkdir()
+            (root / "plugin.json").write_text("{}", encoding="utf-8")
+            hook = root / "hooks" / HOOK.name
+            shutil.copyfile(HOOK, hook)
+            proc = subprocess.run([sys.executable, str(hook)], input="{}", capture_output=True,
+                                  encoding="utf-8", cwd=tmp, timeout=10)
+            self.assertEqual(proc.returncode, 0, proc.stderr)
+            self.assertEqual(proc.stdout, "")
+
+    def test_unwritable_instructions_still_injects_context(self) -> None:
+        """目标为目录时真实写盘失败，但会话提醒仍成功注入。"""
+        with tempfile.TemporaryDirectory() as tmp:
+            cwd = Path(tmp)
+            (cwd / ".codegraph").mkdir()
+            (cwd / "AGENTS.md").mkdir()
+            code, out, err = run_hook(cwd)
+            self.assertEqual(code, 0, err)
+            self.assertIn("additionalContext", json.loads(out)["hookSpecificOutput"])
+            self.assertIn("[codegraph-plugin]", err)
+
     def test_silent_when_not_indexed(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             cwd = Path(tmp)

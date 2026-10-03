@@ -15,19 +15,6 @@ import os
 import sys
 from pathlib import Path
 
-PLUGIN_ROOT = next((c for c in Path(__file__).resolve().parents if (c / "plugin.json").is_file()), Path(__file__).resolve().parents[1])
-sys.path.insert(0, str(PLUGIN_ROOT / "scripts"))
-
-from codegraph_lib import (  # noqa: E402
-    CODEGRAPH_INSTRUCTIONS_BLOCK,
-    CODEGRAPH_SECTION_END,
-    CODEGRAPH_SECTION_START,
-    is_indexed,
-    replace_or_append_marked_section,
-    resolve_instructions_path,
-)
-
-
 def read_payload() -> dict:
     """从 stdin 读 SessionStart JSON payload.
 
@@ -46,6 +33,21 @@ def read_payload() -> dict:
 
 def main() -> int:
     try:
+        # 安装包定位与库加载也属于提醒的 fail-open 边界。
+        plugin_root = next(
+            (c for c in Path(__file__).resolve().parents if (c / "plugin.json").is_file()),
+            Path(__file__).resolve().parents[1],
+        )
+        sys.path.insert(0, str(plugin_root / "scripts"))
+        from codegraph_lib import (
+            CODEGRAPH_INSTRUCTIONS_BLOCK,
+            CODEGRAPH_SECTION_END,
+            CODEGRAPH_SECTION_START,
+            is_indexed,
+            replace_or_append_marked_section,
+            resolve_instructions_path,
+        )
+
         payload = read_payload()
         cwd_str = payload.get("cwd") if isinstance(payload, dict) else None
         cwd = Path(cwd_str) if cwd_str else Path(os.getcwd())
