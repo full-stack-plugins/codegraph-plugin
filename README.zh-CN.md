@@ -1,5 +1,14 @@
 # CodeGraph Plugin
 
+## 插件市场导航
+
+本插件所属分类：**全栈开发**。
+
+| 分类 | 插件市场入口 | 用途 |
+| --- | --- | --- |
+| 全栈开发 | [Full Stack Plugins](https://github.com/partme-ai/full-stack-plugins) | 架构与 UI 设计、代码理解、质量检查、代码审查、流程治理与服务器运维 |
+| AIGC 内容创作 | [Full AIGC Plugins](https://github.com/partme-ai/full-aigc-plugins) | 图像、视频、音频、音乐、3D 与多模态内容创作 |
+
 > 让 CodeGraph 在 AI 编码代理中被自然想起——官方提示词注入 + 全量 20 个 CLI 命令暴露为 slash 命令。面向 Codex / ZCode / Kimi / Claude Code。
 
 ![CodeGraph Plugin](assets/banner.svg)
