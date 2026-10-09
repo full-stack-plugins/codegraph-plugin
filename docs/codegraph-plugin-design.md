@@ -34,16 +34,18 @@ SessionStart fires once per session (and on `resume`/`startup`). That matches th
 
 The plugin tries `.claude/CLAUDE.md` first (matching codegraph's behavior); falls back to `AGENTS.md` if absent. Never auto-creates `.claude/` (avoids forcing a host directory structure).
 
-## 4. Why 20 commands, not just the 5 most-used?
+## 4. Why 21 commands, not just the 5 most-used?
 
-**Question.** Why expose all 20 instead of just `init`/`sync`/`status`/`callers`/`impact`?
+**Question.** Why expose 21 instead of just `init`/`sync`/`status`/`callers`/`impact`?
 
 **Answer.** 
 - The plugin's purpose is **discoverability** — every command is one slash command away from the user.
 - `codegraph install` / `codegraph upgrade` / `codegraph daemon` are operational tasks that benefit from slash-command form (the user doesn't need to remember CLI syntax).
 - The 4 maintenance commands (`daemon`/`unlock`/`version`/`telemetry`) cost ~40 lines of JSON to ship; skipping them costs the user mental overhead later.
 
-Trade-off: 40 command files instead of 10. We accept the file count for the discoverability win.
+Trade-off: 42 command files instead of 10. We accept the file count for the discoverability win.
+
+**Coverage boundary (0.1.7, verified against codegraph v1.6.0).** codegraph exposes 23 subcommands; the plugin covers 21. Excluded: `help` (the host has its own), `ui`/`web` (opens a browser viewer meant for humans, not agents), and the two hidden internal commands `prompt-hook` / `serve --mcp`. The original 0.1.0 spec said "all visible subcommands" — accurate against codegraph v1.5.0, but v1.6.0 added `context`, which 0.1.7 adds here.
 
 ## 5. Why a `.md` mirror of every `.json`?
 

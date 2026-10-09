@@ -11,6 +11,7 @@
 
 | Version | Date | Changes |
 |---|---|---|
+| 0.1.7 | 2026-10-09 | 修正 MCP 工具声明以对齐上游 `DEFAULT_MCP_TOOLS`（默认只向 agent 列出 `codegraph_explore`）；删除捏造的 `codegraph affected` MCP 替代工具；新增 `/codegraph-context`（codegraph 1.6.0 命令）使覆盖达 21/23；提示词文本按 codegraph v1.6.0 重新核对；修复 `./codegraph/` 路径笔误；AGENTS.md 表述对齐市场仓真实 schema；新增非默认 MCP 工具声明回归守卫 |
 | 0.1.5 | 2026-09-23 | 修正格式归属表述（JSON/Markdown 中性措辞，生态对照验证）；`KIMI_COMMANDS` 测试变量改中性名；AGENTS.md 补命令目录约定说明 |
 | 0.1.4 | 2026-09-23 | 新增 bump-plugin CLI 测试（热点零测试闭环）；40 个命令文件 description 双侧检查；README 标题层级 parity 测试；`replace_or_append_marked_section` 标记包含校验 |
 | 0.1.3 | 2026-09-23 | 修复 `bump-plugin.mjs` sync 失败处理（写盘后不再中断）；跨 skill 链接检查覆盖 `kimi-commands/*.md`；`scripts/tests/` 可被 discover；版本面同步 |
@@ -61,7 +62,7 @@ codex plugin add codegraph@full-stack-plugins
 zcode plugin install codegraph --ref v0.1.5
 ```
 
-After install, **in any indexed project** (`./codegraph/` exists), start a new session — the plugin auto-injects the official prompt.
+After install, **in any indexed project** (`.codegraph/` exists), start a new session — the plugin auto-injects the official prompt.
 
 In a non-indexed project, no action happens. To index:
 
@@ -83,7 +84,7 @@ No `PreToolUse` / `PostToolUse` / `UserPromptSubmit` / `Stop` hooks — this plu
 
 ## Slash commands
 
-20 commands, one per `codegraph` CLI subcommand (excluding two hidden internal commands).
+21 commands。覆盖 codegraph CLI 除 `help`（宿主自带）、`ui`/`web`（打开浏览器查看器，面向人而非 agent）与两个隐藏内部命令 `prompt-hook` / `serve --mcp` 之外的全部子命令。
 
 ### Index lifecycle
 
@@ -125,7 +126,7 @@ No `PreToolUse` / `PostToolUse` / `UserPromptSubmit` / `Stop` hooks — this plu
 ## Compatibility
 
 - **Plugin host**: Claude Code (any version with `SessionStart.additionalContext` support), Codex, ZCode, Kimi.
-- **Upstream**: `codegraph` v1.5.0 (verified at sync). The plugin's prompt block is verbatim from `codegraph/src/installer/instructions-template.ts:42-51`. When upstream's `instructions-template.ts` changes, this plugin's `scripts/codegraph_lib/prompt.py` must be re-synced and a patch version bumped (see `AGENTS.md` discipline).
+- **Upstream**: `codegraph` v1.6.0 (0.1.7 重新核对，逐字节一致，805 bytes)。 The plugin's prompt block is verbatim from `codegraph/src/installer/instructions-template.ts:42-51`. When upstream's `instructions-template.ts` changes, this plugin's `scripts/codegraph_lib/prompt.py` must be re-synced and a patch version bumped (see `AGENTS.md` discipline).
 - **Runtime**: pure Python stdlib. No `pip install`, no third-party runtime dependencies.
 - **Filesystem**: writes to host instruction files only. Never auto-creates `<cwd>/.claude/` directory.
 
@@ -164,8 +165,8 @@ cd /Users/wandl/workspaces/workspace-agent-skills/full-stack-plugins-repositorie
 86 files, 42 unit tests (all passing):
 
 - 1 skill manifest (`skills/codegraph-helper/SKILL.md` + 2 references)
-- 20 JSON slash commands (`commands/codegraph-*.json`, declared in `kimi.plugin.json`)
-- 20 Markdown slash commands (`kimi-commands/codegraph-*.md`)
+- 21 JSON slash commands (`commands/codegraph-*.json`, declared in `kimi.plugin.json`)
+- 21 Markdown slash commands (`kimi-commands/codegraph-*.md`)
 - 4 host manifests (`kimi.plugin.json`, `.codex-plugin/plugin.json`, `.zcode-plugin/plugin.json`, `.agents/plugins/marketplace.json`)
 - 3 SVG assets (logo, composer icon, banner)
 - 1 hook (`hooks/inject_codegraph_prompt.py`) + manifest (`hooks/hooks.json`)

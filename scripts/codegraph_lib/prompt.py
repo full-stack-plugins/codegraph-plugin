@@ -6,8 +6,9 @@ verbatim 同步自 codegraph 上游 src/installer/instructions-template.ts。
 1. 复制新文本到本文件
 2. bump patch 版本
 3. 核对 skills/codegraph-helper/references/instructions-block.md
+4. 在 RELEASE-NOTES.md / RELEASE-NOTES.zh-CN.md 的 Release history 表记录同步
 
-上版本最后核对: codegraph v1.5.0 (2026-07-21)。
+上版本最后核对: codegraph v1.6.0 (2026-08-26)，与上游逐字节一致（805 bytes），无文本漂移。
 """
 from __future__ import annotations
 

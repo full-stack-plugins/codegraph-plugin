@@ -6,16 +6,16 @@ CodeGraph 是 colbymchenry/codegraph 项目（MIT）提供的本地代码智能�
 
 1. 用户手动说「帮我用 codegraph」才会触发（依赖记忆与重复指令）
 2. codegraph 自家 `codegraph install` 把官方提示词块写到 `~/.claude/CLAUDE.md`（**只覆盖 Task 工具子代理**，不覆盖主代理运行时上下文，也不管 AGENTS.md 兜底）
-3. codegraph CLI 全量 20 个命令没有 slash command 形式暴露，用户得手动 `codegraph explore "<query>"` 等
+3. codegraph CLI 的命令没有 slash command 形式暴露，用户得手动 `codegraph explore "<query>"` 等（初始按 codegraph v1.5.0 的 20 个命令设计；v1.6.0 新增 `context` 后由 0.1.7 补齐至 21）
 
 本插件补齐以上三件事。
 
 ## What changes
 
 - **新增** `codegraph-plugin`（Apache-2.0）仓库。
-- **SessionStart 钩子**（Python stdlib，无依赖）检测 `<cwd>/.codegraph/`，存在则把官方提示词块（verbatim 同步自上游 `instructions-template.ts:42-51`）写到 `<cwd>/.claude/CLAUDE.md`（优先）或 `<cwd>/AGENTS.md`（兜底），并通过 `SessionStart.additionalContext` 注入主代理运行时上下文。
-- **20 个 slash command**（`.json` Kimi 主读 + `.md` Codex 主读）一对一覆盖 codegraph CLI（除 `prompt-hook` / `serve --mcp` 两个隐藏命令外）。
-- **1 个本地技能** `codegraph-helper`，description 触发智能体根据任务选择合适的 codegraph MCP 工具。
+- **SessionStart 钩子**（Python stdlib，无依赖）检测 `<cwd>/.codegraph/`，存在则把官方提示词块（verbatim 同步自上游 `instructions-template.ts` 的 `CODEGRAPH_INSTRUCTIONS_BLOCK`）写到 `<cwd>/.claude/CLAUDE.md`（存在时优先）或 `<cwd>/AGENTS.md`（兜底），并通过 `SessionStart.additionalContext` 注入主代理运行时上下文。
+- **21 个 slash command**（JSON 格式 `commands/*.json` + Markdown 格式 `kimi-commands/*.md`，各一份）覆盖 codegraph v1.6.0 的 23 个子命令，除 `help`、`ui`/`web` 与 `prompt-hook` / `serve --mcp` 外。
+- **1 个本地技能** `codegraph-helper`，description 引导智能体优先使用默认唯一暴露的 `codegraph_explore`，其余能力走同名 `codegraph` CLI 子命令。
 - **marketplace hub 注册**：在 `full-stack-plugins/catalog.json` 加条目，`sync-marketplaces.mjs --write` 重新生成三平台清单。
 
 ## Non-goals

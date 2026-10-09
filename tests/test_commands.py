@@ -1,4 +1,4 @@
-"""20 个 slash 命令的 JSON + Markdown 解析 + 一致性测试.
+"""21 个 slash 命令的 JSON + Markdown 解析 + 一致性测试.
 
 每个 .json 必须:
 - 可解析
@@ -30,8 +30,8 @@ class TestCommandFiles(unittest.TestCase):
         self.mds = sorted(MD_COMMANDS.glob("*.md"))
 
     def test_count(self) -> None:
-        self.assertEqual(len(self.jsons), 20, f"expected 20 .json, got {len(self.jsons)}")
-        self.assertEqual(len(self.mds), 20, f"expected 20 .md, got {len(self.mds)}")
+        self.assertEqual(len(self.jsons), 21, f"expected 21 .json, got {len(self.jsons)}")
+        self.assertEqual(len(self.mds), 21, f"expected 21 .md, got {len(self.mds)}")
 
     def test_json_files(self) -> None:
         for jf in self.jsons:
@@ -73,6 +73,66 @@ class TestCommandFiles(unittest.TestCase):
                 m = desc_re.search(parts[1])
                 self.assertIsNotNone(m, f"{mf.name} frontmatter 缺 description")
                 self.assertGreater(len(m.group(1).strip().strip("\"' ")), 4)
+
+
+class TestMcpToolClaimsMatchUpstream(unittest.TestCase):
+    """上游默认只向 agent 列出 `codegraph_explore`（DEFAULT_MCP_TOOLS）。
+
+    其余 7 个 MCP 工具 handler 仍在但不对 agent 列出，直接调用会返回
+    `Tool ... is disabled via CODEGRAPH_MCP_TOOLS` 的 isError 结果。
+    因此命令文件不得把它们写成「可用的替代工具」——那会把 agent 导向必然
+    失败的调用。本测试锁死这条纪律。
+    """
+
+    NON_DEFAULT_MCP_TOOLS = (
+        "codegraph_callers",
+        "codegraph_callees",
+        "codegraph_impact",
+        "codegraph_node",
+        "codegraph_search",
+        "codegraph_files",
+        "codegraph_status",
+    )
+
+    def _texts(self):
+        for jf in sorted(COMMANDS.glob("*.json")):
+            yield jf.name, jf.read_text(encoding="utf-8")
+        for mf in sorted(MD_COMMANDS.glob("*.md")):
+            yield mf.name, mf.read_text(encoding="utf-8")
+
+    @staticmethod
+    def _logical_lines(text: str):
+        """JSON 里换行是字面 `\\n` 两字符序列，Markdown 里是真换行——两者都切。"""
+        for chunk in re.split(r"\\n|\n", text):
+            yield chunk
+
+    def test_no_non_default_tool_presented_as_alternative(self) -> None:
+        """非默认 MCP 工具不得出现在「替代工具 / MCP alternative」句式里。"""
+        claim_re = re.compile(r"替代工具|MCP alternative|MCP equivalent|MCP 对应")
+        disclaimer = ("disabled", "not listed", "默认不可调用", "不对 agent 列出", "无——", "CLI 专属")
+        offenders = []
+        for name, text in self._texts():
+            for line in self._logical_lines(text):
+                if not claim_re.search(line):
+                    continue
+                if any(d in line for d in disclaimer):
+                    continue
+                for tool in self.NON_DEFAULT_MCP_TOOLS:
+                    if tool in line:
+                        offenders.append((name, tool, line.strip()[:90]))
+        self.assertEqual(
+            offenders, [], f"非默认 MCP 工具被当成可用替代工具: {offenders}"
+        )
+
+    def test_skill_md_leads_with_explore_only(self) -> None:
+        """SKILL.md frontmatter 不得把非默认 MCP 工具列为首选调用路径。"""
+        skill = PLUGIN_ROOT / "skills" / "codegraph-helper" / "SKILL.md"
+        front = skill.read_text(encoding="utf-8").split("---", 2)[1]
+        offenders = [
+            t for t in self.NON_DEFAULT_MCP_TOOLS
+            if re.search(rf"优先调用[^\n]*{t}", front)
+        ]
+        self.assertEqual(offenders, [], f"frontmatter 仍把非默认工具列为首选: {offenders}")
 
 
 class TestNoExternalVendoredCrossLinks(unittest.TestCase):

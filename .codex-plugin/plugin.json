@@ -1,7 +1,7 @@
 {
   "name": "codegraph",
-  "version": "0.1.6+codex.20261003",
-  "description": "Inject the official CodeGraph prompt at session start (only when a `.codegraph/` directory exists) and expose all 20 codegraph CLI commands as slash commands for Codex/ZCode/Kimi/Claude Code. Pure Python stdlib.",
+  "version": "0.1.7+codex.20261009",
+  "description": "Inject the official CodeGraph prompt at session start (only when a `.codegraph/` directory exists) and expose 21 of codegraph's 23 CLI commands as slash commands for Codex/ZCode/Kimi/Claude Code. Pure Python stdlib.",
   "author": {
     "name": "Full Stack Plugins",
     "url": "https://github.com/full-stack-plugins"
@@ -19,8 +19,8 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "CodeGraph",
-    "shortDescription": "Discoverable codegraph — official prompt + all CLI commands",
-    "longDescription": "Injects the official CodeGraph prompt at SessionStart (only when `.codegraph/` exists). Exposes all 20 codegraph CLI commands as slash commands. Pure Python stdlib.",
+    "shortDescription": "Discoverable codegraph — official prompt + 21 CLI commands",
+    "longDescription": "Injects the official CodeGraph prompt at SessionStart (only when `.codegraph/` exists). Exposes 21 of codegraph's 23 CLI commands as slash commands. Pure Python stdlib.",
     "developerName": "Full Stack Plugins",
     "category": "Developer Tools",
     "capabilities": [

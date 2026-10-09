@@ -5,10 +5,10 @@
     "en": "CodeGraph",
     "zh-CN": "CodeGraph 代码智能"
   },
-  "version": "0.1.6",
-  "description": "Inject the official CodeGraph prompt at session start (only when a `.codegraph/` directory exists) and expose all 20 codegraph CLI commands as slash commands for Codex/ZCode/Kimi/Claude Code. Pure Python stdlib.",
+  "version": "0.1.7",
+  "description": "Inject the official CodeGraph prompt at session start (only when a `.codegraph/` directory exists) and expose 21 of codegraph's 23 CLI commands as slash commands for Codex/ZCode/Kimi/Claude Code. Pure Python stdlib.",
   "description_i18n": {
-    "en": "At SessionStart, when a `.codegraph/` directory exists, this plugin writes the official CodeGraph prompt block to `<cwd>/.claude/CLAUDE.md` or `<cwd>/AGENTS.md`, and injects the same block as SessionStart additionalContext. Exposes all 20 codegraph CLI commands as slash commands.",
+    "en": "At SessionStart, when a `.codegraph/` directory exists, this plugin writes the official CodeGraph prompt block to `<cwd>/.claude/CLAUDE.md` or `<cwd>/AGENTS.md`, and injects the same block as SessionStart additionalContext. Exposes 21 of codegraph's 23 CLI commands as slash commands.",
     "zh-CN": "在 SessionStart 时，当 `.codegraph/` 目录存在，本插件把官方 CodeGraph 提示词块写入 `<cwd>/.claude/CLAUDE.md`（不存在则 `<cwd>/AGENTS.md`），并通过 additionalContext 注入当前会话。同时把 codegraph 全量 20 个 CLI 命令暴露为 slash 命令。"
   },
   "author": {

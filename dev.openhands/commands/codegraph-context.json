@@ -1,0 +1,5 @@
+{
+  "name": "codegraph-context",
+  "description": "为一个任务聚合相关符号、关系与代码块",
+  "prompt": "运行 /codegraph-context。\n\n步骤：\n1. 取用户描述的任务字符串（必填；自然语言即可，例如「给订单退款加支付网关」）。\n2. 解析路径参数；缺省则为 cwd。\n3. 运行 `codegraph context <task>` —— 为该任务聚合相关符号、关系与代码块。\n4. 可选参数：`--format markdown|json`（default markdown，agent 机读用 json）、`--max-nodes N`（符号数上限）、`--no-code`（只要结构、不要代码块）。\n\n与 explore 的分工：`context` 以「任务」为入口做上下文聚合，`explore` 以「符号/文件/问题」为入口取源码+调用路径。不确定用哪个时先用 `explore`。\n\n替代工具：无——`context` 是 CLI 专属命令，上游没有对应的 MCP 工具。\n\n边界：\n- 只读，不修改文件\n- 不读取用户源代码到外部（仅依赖本地 .codegraph/ 索引）"
+}

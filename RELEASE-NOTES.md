@@ -13,6 +13,7 @@
 
 | Version | Date | Changes |
 |---|---|---|
+| 0.1.7 | 2026-10-09 | Fix MCP tool claims to match upstream `DEFAULT_MCP_TOOLS` (only `codegraph_explore` is listed to agents by default); drop the fabricated `codegraph affected` MCP alternative; add `/codegraph-context` (codegraph 1.6.0 command) for 21/23 coverage; re-sync prompt text against codegraph v1.6.0; fix `./codegraph/` path typo; align AGENTS.md wording with actual marketplace schema; add regression guard for non-default MCP tool claims |
 | 0.1.5 | 2026-09-23 | Fix format-attribution claims (JSON/Markdown neutral wording, ecosystem-verified); rename `KIMI_COMMANDS` test variable; document command-directory convention in AGENTS.md |
 | 0.1.4 | 2026-09-23 | Add bump-plugin CLI tests (untested-hotspot closure); description parity check for all 40 command files; README heading-structure parity test; marker-containment guard in `replace_or_append_marked_section` |
 | 0.1.3 | 2026-09-23 | Fix `bump-plugin.mjs` sync failure handling (no longer aborts post-write); extend cross-link lint to cover `kimi-commands/*.md`; make `scripts/tests/` discoverable; sync version surfaces |
@@ -63,7 +64,7 @@ codex plugin add codegraph@full-stack-plugins
 zcode plugin install codegraph --ref v0.1.5
 ```
 
-After install, **in any indexed project** (`./codegraph/` exists), start a new session — the plugin auto-injects the official prompt.
+After install, **in any indexed project** (`.codegraph/` exists), start a new session — the plugin auto-injects the official prompt.
 
 In a non-indexed project, no action happens. To index:
 
@@ -85,7 +86,7 @@ No `PreToolUse` / `PostToolUse` / `UserPromptSubmit` / `Stop` hooks — this plu
 
 ## Slash commands
 
-20 commands, one per `codegraph` CLI subcommand (excluding two hidden internal commands).
+21 commands. Covers every `codegraph` CLI subcommand except `help` (the host has its own), `ui`/`web` (opens a browser viewer meant for humans, not agents), and the two hidden internal commands `prompt-hook` / `serve --mcp`.
 
 ### Index lifecycle
 
@@ -127,7 +128,7 @@ No `PreToolUse` / `PostToolUse` / `UserPromptSubmit` / `Stop` hooks — this plu
 ## Compatibility
 
 - **Plugin host**: Claude Code (any version with `SessionStart.additionalContext` support), Codex, ZCode, Kimi.
-- **Upstream**: `codegraph` v1.5.0 (verified at sync). The plugin's prompt block is verbatim from `codegraph/src/installer/instructions-template.ts:42-51`. When upstream's `instructions-template.ts` changes, this plugin's `scripts/codegraph_lib/prompt.py` must be re-synced and a patch version bumped (see `AGENTS.md` discipline).
+- **Upstream**: `codegraph` v1.6.0 (re-verified 0.1.7, byte-equal, 805 bytes). The plugin's prompt block is verbatim from `codegraph/src/installer/instructions-template.ts:42-51`. When upstream's `instructions-template.ts` changes, this plugin's `scripts/codegraph_lib/prompt.py` must be re-synced and a patch version bumped (see `AGENTS.md` discipline).
 - **Runtime**: pure Python stdlib. No `pip install`, no third-party runtime dependencies.
 - **Filesystem**: writes to host instruction files only. Never auto-creates `<cwd>/.claude/` directory.
 
@@ -166,8 +167,8 @@ cd /Users/wandl/workspaces/workspace-agent-skills/full-stack-plugins-repositorie
 86 files, 42 unit tests (all passing):
 
 - 1 skill manifest (`skills/codegraph-helper/SKILL.md` + 2 references)
-- 20 JSON slash commands (`commands/codegraph-*.json`, declared in `kimi.plugin.json`)
-- 20 Markdown slash commands (`kimi-commands/codegraph-*.md`)
+- 21 JSON slash commands (`commands/codegraph-*.json`, declared in `kimi.plugin.json`)
+- 21 Markdown slash commands (`kimi-commands/codegraph-*.md`)
 - 4 host manifests (`kimi.plugin.json`, `.codex-plugin/plugin.json`, `.zcode-plugin/plugin.json`, `.agents/plugins/marketplace.json`)
 - 3 SVG assets (logo, composer icon, banner) + 3 PNG equivalents
 - 1 hook (`hooks/inject_codegraph_prompt.py`) + manifest (`hooks/hooks.json`)
