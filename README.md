@@ -21,13 +21,13 @@ Three things, and **only** these three:
    - The current session, via `SessionStart.additionalContext` JSON output.
    - `<cwd>/.claude/CLAUDE.md` if it exists; else `<cwd>/AGENTS.md`. Uses atomic, marker-fenced section replacement — byte-equal content is a no-op, so this is safe to run alongside `codegraph install`.
 2. **Exposes 21 of codegraph's 23 CLI commands** as slash commands in two formats: JSON (`commands/*.json`, declared in `kimi.plugin.json`) and Markdown (`kimi-commands/*.md`), including the four hidden-but-useful maintenance commands (`daemon`, `unlock`, `version`, `telemetry`).
-3. **Registers a discovery skill** (`codegraph-helper`) that conditions the agent to use the right CodeGraph MCP tool for the task at hand.
+3. **Registers a discovery skill** (`codegraph-helper`) that makes the agent **check whether the repo is indexed and, if not, proactively offer to index it**. The skill activates on code-structure questions *whether or not* `.codegraph/` exists: it checks first, then either answers via CodeGraph or tells the user 「this repo isn't indexed yet — want me to index it?」 and runs `codegraph init` once the user agrees.
 
 ## What this plugin does **not** do
 
 - It does **not** modify or replace the `codegraph` CLI. The upstream `colbymchenry/codegraph` (MIT) is the source of truth.
 - It does **not** install the `codegraph` CLI. Users run `npm i -g @colbymchenry/codegraph` (or the install script) themselves; the plugin just exposes `/codegraph-install` as a guided wrapper around `codegraph install` for MCP wiring.
-- It does **not** auto-run `codegraph init`. Indexing is the user's decision. The plugin only activates when `.codegraph/` already exists.
+- It does **not** run `codegraph init` **without asking**. Indexing writes a `.codegraph/` directory, so the agent must get consent first — but it *does* detect the missing index and prompt for it automatically, because that discovery is the whole point of this plugin. (The SessionStart hook itself stays silent in un-indexed repos, matching the upstream prompt's own "skip CodeGraph entirely" wording.)
 - It does **not** hook `PreToolUse`, `PostToolUse`, `UserPromptSubmit`, or `Stop` — only `SessionStart`. This avoids collisions with codeguard-plugin and other plugins that own those events.
 
 ## Requirements

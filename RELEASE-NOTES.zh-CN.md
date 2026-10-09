@@ -11,6 +11,7 @@
 
 | Version | Date | Changes |
 |---|---|---|
+| 0.2.0 | 2026-10-09 | **行为变更** — `codegraph-helper` 技能不再把「已建立索引」当作激活门槛；改为在任意仓库的代码结构类问题上激活，自行检查 `.codegraph/`，未索引时主动提示并征得同意后执行 `codegraph init`。补齐 `init` 与 `install` 的边界说明。新增回归守卫 |
 | 0.1.7 | 2026-10-09 | 修正 MCP 工具声明以对齐上游 `DEFAULT_MCP_TOOLS`（默认只向 agent 列出 `codegraph_explore`）；删除捏造的 `codegraph affected` MCP 替代工具；新增 `/codegraph-context`（codegraph 1.6.0 命令）使覆盖达 21/23；提示词文本按 codegraph v1.6.0 重新核对；修复 `./codegraph/` 路径笔误；AGENTS.md 表述对齐市场仓真实 schema；新增非默认 MCP 工具声明回归守卫 |
 | 0.1.5 | 2026-09-23 | 修正格式归属表述（JSON/Markdown 中性措辞，生态对照验证）；`KIMI_COMMANDS` 测试变量改中性名；AGENTS.md 补命令目录约定说明 |
 | 0.1.4 | 2026-09-23 | 新增 bump-plugin CLI 测试（热点零测试闭环）；40 个命令文件 description 双侧检查；README 标题层级 parity 测试；`replace_or_append_marked_section` 标记包含校验 |

@@ -12,7 +12,7 @@
 
 ## 版本
 
-- 当前: v0.1.7
+- 当前: v0.2.0
 - 同步自 codegraph v1.6.0 的 `instructions-template.ts`（0.1.7 重新核对：与上游逐字节一致，805 bytes，无文本漂移）
 - Codex 后缀: `<version>+codex.YYYYMMDD`
 
@@ -42,11 +42,30 @@ codegraph v1.6.0 共 23 个子命令，本插件以 21 个 slash 命令覆盖，
 
 `codegraph context`（v1.6.0 新增）在 0.1.7 补齐——v0.1.0 时期的「覆盖全部可见命令」表述在 v1.5.0 时成立，v1.6.0 加入 `context` 后即失效。
 
+## 发现性是本插件的目的（0.2.0 起）
+
+本插件存在的意义是**让智能体自己发现 CodeGraph 并主动引导用户建立索引**，不是只在已索引仓库里被动待命。因此：
+
+- `codegraph-helper` 的 frontmatter `description` **不得**以「仓库根有 `.codegraph/` 目录时使用」作为激活门槛。若这样写，未索引仓库里技能根本不触发，其「未索引则提示用户」分支永远执行不到——这是 v0.1.x 的一个真实缺陷，0.2.0 已解除。
+- 技能的行为契约：**先检查 → 已索引就用 CodeGraph 回答 / 未索引就主动提示并征得同意 → 同意后跑 `codegraph init`**。不得因为「索引是用户决策」就当没看见。
+- **SessionStart 钩子保持静默**：上游注入块原文写着 "If there is no `.codegraph/` directory, skip CodeGraph entirely — indexing is the user's decision."（见 `prompt.CODEGRAPH_INSTRUCTIONS_BLOCK`）。钩子若在未索引时发「你该去索引」的提示，等于自我否定刚 verbatim 注入的块，违反上方 L6。未索引场景由技能的「检查 + 提示」通路兜底。
+
+## `init` 与 `install` 的边界
+
+两者都是用户的决策，但性质不同，不可混为一谈：
+
+| 命令 | 副作用 | 插件立场 |
+|---|---|---|
+| `codegraph init` | 在仓库根写 `.codegraph/`，项目内、可重建 | **主动检查 + 主动提示**；征得同意后可代跑 |
+| `codegraph install` | 改用户全局 MCP 配置，跨项目、影响宿主 | **不代劳**，仅通过 `/codegraph-install` 引导 |
+
+判断标准是副作用的作用域与可逆性，不是「谁做决定」。
+
 ## 不做的事
 
 - 不暴露 `codegraph prompt-hook` / `codegraph serve --mcp`（codegraph 自家隐藏命令），也不暴露 `help` / `ui` / `web`
 - 不挂 PreToolUse/PostToolUse/UserPromptSubmit/Stop 钩子（避免与 codeguard-plugin 抢触发器）
-- 不自动跑 `codegraph install`（那是用户的一次性 wiring 决策，插件不能越权）
+- 不自动跑 `codegraph install`（MCP wiring 改的是用户全局配置，作用域跨项目，插件不能越权——与 `init` 的处理见上节）
 - 不读取或上传任何源代码到外部
 
 <!-- partme-agent-plugin-policy:v1 -->

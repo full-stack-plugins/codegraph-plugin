@@ -25,13 +25,13 @@
    - 当前会话，通过 `SessionStart.additionalContext` JSON 输出；
    - `<cwd>/.claude/CLAUDE.md`（如果存在）；否则 `<cwd>/AGENTS.md`。使用标记区间原子替换——字节级幂等，所以与 `codegraph install` 并存是安全的。
 2. **暴露 codegraph 23 个 CLI 命令中的 21 个**为 slash 命令，JSON（`commands/*.json`，由 `kimi.plugin.json` 声明）与 Markdown（`kimi-commands/*.md`）双格式，包括 4 个隐藏但实用的维护命令（`daemon` / `unlock` / `version` / `telemetry`）。
-3. **注册发现型技能**（`codegraph-helper`），让智能体根据用户问题选择合适的 CodeGraph MCP 工具。
+3. **注册发现型技能**（`codegraph-helper`），让智能体**主动检查仓库是否已索引，未索引则主动提示可以索引**。该技能在代码结构类问题上激活，**不论 `.codegraph/` 是否存在**：先检查，已索引就用 CodeGraph 回答；未索引就告诉用户「此仓库尚未索引，要现在索引吗」，用户同意后运行 `codegraph init`。
 
 ## 本插件**不**做什么
 
 - **不**修改或替换 `codegraph` CLI。上游 [colbymchenry/codegraph](https://github.com/colbymchenry/codegraph)（MIT）是唯一权威。
 - **不**安装 `codegraph` CLI。用户自行 `npm i -g @colbymchenry/codegraph`（或 install.sh）；本插件仅提供 `/codegraph-install` 作为 `codegraph install` 的引导包装。
-- **不**自动跑 `codegraph init`。索引是用户的决策，本插件只在 `.codegraph/` 已存在时激活。
+- **不**在未征得同意前跑 `codegraph init`。索引会在仓库根写 `.codegraph/`，必须先拿到用户同意——但智能体**会主动检测缺失的索引并自动提示**，因为这正是本插件存在的意义。（SessionStart 钩子本身在未索引仓库仍保持静默，与上游提示词自带的 "skip CodeGraph entirely" 措辞一致。）
 - **不**挂 `PreToolUse` / `PostToolUse` / `UserPromptSubmit` / `Stop` 钩子——只挂 `SessionStart`。避免和 codeguard-plugin 等其他插件抢触发器。
 
 ## 前置条件

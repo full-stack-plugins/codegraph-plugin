@@ -13,6 +13,7 @@
 
 | Version | Date | Changes |
 |---|---|---|
+| 0.2.0 | 2026-10-09 | **Behaviour change** — the `codegraph-helper` skill no longer treats an existing index as its activation gate; it now activates on code-structure questions in any repo, checks for `.codegraph/` itself, and proactively offers to index when absent (running `codegraph init` only after user consent). Documented the `init` vs `install` boundary. Regression guard added |
 | 0.1.7 | 2026-10-09 | Fix MCP tool claims to match upstream `DEFAULT_MCP_TOOLS` (only `codegraph_explore` is listed to agents by default); drop the fabricated `codegraph affected` MCP alternative; add `/codegraph-context` (codegraph 1.6.0 command) for 21/23 coverage; re-sync prompt text against codegraph v1.6.0; fix `./codegraph/` path typo; align AGENTS.md wording with actual marketplace schema; add regression guard for non-default MCP tool claims |
 | 0.1.5 | 2026-09-23 | Fix format-attribution claims (JSON/Markdown neutral wording, ecosystem-verified); rename `KIMI_COMMANDS` test variable; document command-directory convention in AGENTS.md |
 | 0.1.4 | 2026-09-23 | Add bump-plugin CLI tests (untested-hotspot closure); description parity check for all 40 command files; README heading-structure parity test; marker-containment guard in `replace_or_append_marked_section` |

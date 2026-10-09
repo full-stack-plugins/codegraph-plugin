@@ -16,6 +16,28 @@ A plugin that activates on SessionStart ensures **all three** audiences get the 
 - `additionalContext` injection reaches the main agent's runtime context.
 - Both audiences get the same byte-equal text.
 
+## 1b. Why does the skill check for an index instead of assuming one?
+
+**Question.** Should `codegraph-helper` just assume the repo is indexed and use CodeGraph?
+
+**Answer.** No — and in v0.1.x it actually made that assumption structurally. The skill's frontmatter read *"仓库根有 `.codegraph/` 目录时使用"*, which made index presence the **activation gate**. The same description then ended with *「`.codegraph/` 不存在时引导用户运行 `/codegraph-init`」* — a branch that could never execute, because the skill only activated when it was already indexed. The SessionStart hook was silent for the same reason (`if not is_indexed(cwd): return 0`).
+
+Net effect: in an un-indexed repo, **neither** path fired. The agent got no signal that CodeGraph existed, so "discoverability" reduced to discoverability-among-those-who-already-indexed — the one audience that needed it least.
+
+**0.2.0 contract.** The skill activates on code-structure questions **regardless of index state**, then branches:
+
+| `.codegraph/` | Agent behavior |
+|---|---|
+| present | Answer via `codegraph_explore` (or the CLI table). Never fall back to Read + grep. |
+| absent | Tell the user the repo isn't indexed, offer to index, run `codegraph init` **only after they agree**. |
+
+**Why the hook still stays silent when un-indexed.** The injected block must be verbatim from upstream, and upstream's own text says *"If there is no `.codegraph/` directory, skip CodeGraph entirely — indexing is the user's decision."* Emitting an "you should index this" hint from the hook would contradict the block it just injected verbatim, violating the plugin's own prompt-sync discipline. The skill's check-and-prompt path covers that case instead.
+
+**`init` vs `install`.** Both are "the user's decision", but the plugin treats them differently — and the discriminator is *scope and reversibility*, not *who decides*:
+
+- `codegraph init` → writes `.codegraph/` inside the project, rebuildable → **proactive check + proactive prompt**, may run it with consent.
+- `codegraph install` → rewrites the user's global MCP config, cross-project, affects the host itself → **never runs it for the user**, only guides via `/codegraph-install`.
+
 ## 2. Why inject at SessionStart, not on every prompt?
 
 **Question.** UserPromptSubmit fires every turn — wouldn't that be more reliable?
