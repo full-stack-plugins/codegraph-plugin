@@ -22,7 +22,7 @@
       "interface": {
         "displayName": "CodeGraph",
         "shortDescription": "Discoverable codegraph — official prompt + 21 CLI commands",
-        "logo": "https://cdn.jsdelivr.net/gh/full-stack-plugins/codegraph-plugin@v0.2.0/assets/official-logo.png"
+        "logo": "https://cdn.jsdelivr.net/gh/full-stack-plugins/codegraph-plugin@v0.3.0/assets/official-logo.png"
       }
     }
   ]
