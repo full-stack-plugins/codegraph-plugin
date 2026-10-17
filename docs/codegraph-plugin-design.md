@@ -16,6 +16,28 @@ A plugin that activates on SessionStart ensures **all three** audiences get the 
 - `additionalContext` injection reaches the main agent's runtime context.
 - Both audiences get the same byte-equal text.
 
+## 1b. Why does the skill check for an index instead of assuming one?
+
+**Question.** Should `codegraph-helper` just assume the repo is indexed and use CodeGraph?
+
+**Answer.** No — and in v0.1.x it actually made that assumption structurally. The skill's frontmatter read *"仓库根有 `.codegraph/` 目录时使用"*, which made index presence the **activation gate**. The same description then ended with *「`.codegraph/` 不存在时引导用户运行 `/codegraph-init`」* — a branch that could never execute, because the skill only activated when it was already indexed. The SessionStart hook was silent for the same reason (`if not is_indexed(cwd): return 0`).
+
+Net effect: in an un-indexed repo, **neither** path fired. The agent got no signal that CodeGraph existed, so "discoverability" reduced to discoverability-among-those-who-already-indexed — the one audience that needed it least.
+
+**0.2.0 contract.** The skill activates on code-structure questions **regardless of index state**, then branches:
+
+| `.codegraph/` | Agent behavior |
+|---|---|
+| present | Answer via `codegraph_explore` (or the CLI table). Never fall back to Read + grep. |
+| absent | Tell the user the repo isn't indexed, offer to index, run `codegraph init` **only after they agree**. |
+
+**Why the hook still stays silent when un-indexed.** The injected block must be verbatim from upstream, and upstream's own text says *"If there is no `.codegraph/` directory, skip CodeGraph entirely — indexing is the user's decision."* Emitting an "you should index this" hint from the hook would contradict the block it just injected verbatim, violating the plugin's own prompt-sync discipline. The skill's check-and-prompt path covers that case instead.
+
+**`init` vs `install`.** Both are "the user's decision", but the plugin treats them differently — and the discriminator is *scope and reversibility*, not *who decides*:
+
+- `codegraph init` → writes `.codegraph/` inside the project, rebuildable → **proactive check + proactive prompt**, may run it with consent.
+- `codegraph install` → rewrites the user's global MCP config, cross-project, affects the host itself → **never runs it for the user**, only guides via `/codegraph-install`.
+
 ## 2. Why inject at SessionStart, not on every prompt?
 
 **Question.** UserPromptSubmit fires every turn — wouldn't that be more reliable?
@@ -34,16 +56,18 @@ SessionStart fires once per session (and on `resume`/`startup`). That matches th
 
 The plugin tries `.claude/CLAUDE.md` first (matching codegraph's behavior); falls back to `AGENTS.md` if absent. Never auto-creates `.claude/` (avoids forcing a host directory structure).
 
-## 4. Why 20 commands, not just the 5 most-used?
+## 4. Why 21 commands, not just the 5 most-used?
 
-**Question.** Why expose all 20 instead of just `init`/`sync`/`status`/`callers`/`impact`?
+**Question.** Why expose 21 instead of just `init`/`sync`/`status`/`callers`/`impact`?
 
 **Answer.** 
 - The plugin's purpose is **discoverability** — every command is one slash command away from the user.
 - `codegraph install` / `codegraph upgrade` / `codegraph daemon` are operational tasks that benefit from slash-command form (the user doesn't need to remember CLI syntax).
 - The 4 maintenance commands (`daemon`/`unlock`/`version`/`telemetry`) cost ~40 lines of JSON to ship; skipping them costs the user mental overhead later.
 
-Trade-off: 40 command files instead of 10. We accept the file count for the discoverability win.
+Trade-off: 42 command files instead of 10. We accept the file count for the discoverability win.
+
+**Coverage boundary (0.1.7, verified against codegraph v1.6.0).** codegraph exposes 23 subcommands; the plugin covers 21. Excluded: `help` (the host has its own), `ui`/`web` (opens a browser viewer meant for humans, not agents), and the two hidden internal commands `prompt-hook` / `serve --mcp`. The original 0.1.0 spec said "all visible subcommands" — accurate against codegraph v1.5.0, but v1.6.0 added `context`, which 0.1.7 adds here.
 
 ## 5. Why a `.md` mirror of every `.json`?
 

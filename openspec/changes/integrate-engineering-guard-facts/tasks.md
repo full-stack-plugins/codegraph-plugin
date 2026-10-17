@@ -1,23 +1,27 @@
-# codegraph-plugin 工程守卫集成任务
+> ⏸️ **已冻结（2026-10-09 用户决定）**：engineering-guard 系列整体冻结，暂停实施。保留任务与文档，不开始新任务、不新增计划、不并行推进实现；解冻需用户明确批准。
 
-来源：2026-10-17 按既有总体规划重建；原引用路径在当前检出及本地可用历史中未找到。本变更是新重建的任务定义，不声称恢复了历史原文，也不声明实现或用户验收已完成。依据为 [traceability](https://github.com/full-stack-plugins/codeguard/blob/8d7c0e997bf21b3306573b3be89ff8c312c9de38/docs/engineering-guard/traceability.md)、[acceptance](https://github.com/full-stack-plugins/codeguard/blob/8d7c0e997bf21b3306573b3be89ff8c312c9de38/docs/engineering-guard/acceptance.md)、[protocol](https://github.com/full-stack-plugins/codeguard/blob/8d7c0e997bf21b3306573b3be89ff8c312c9de38/docs/engineering-guard/protocol.md) 与本仓现有维护约束。
+# 工程守卫实施任务
 
-状态：全部待实施。完成状态只在本账本维护；实现与所需真实环境验证齐备后才能勾选。每行列出的依赖是前置验收义务，不把文档创建当成前置实现完成。
+状态：全部待实施。本轮仅完成规划；下面的 fixture/测试模块为拟新增，不声称已经存在或执行。只在实现、目标 RED→GREEN、受影响回归及所需真实环境证据齐备后勾选。
 
-## 1. 实施与验证
+依赖前缀：K=codeguard 内核，F=codegraph-plugin，H=codeguard-plugin，R=codereview-plugin，G=gitflow-plugin，W=flowguard-plugin。跨仓依赖通过任务 ID 引用，完成状态只在所属仓账本维护。所有实现先复核当前 HEAD 与用户修改；目标路径见 [design](design.md)。
 
-- [ ] 1.1 **EG-F01** [owner=codegraph-plugin] 固定既有 CLI/MCP 客户端职责、提示原文与 SessionStart 行为，记录当前 provider/插件身份；正常与缺 CLI 启动均实测。 依赖：EG-M01。规格：EG-CGP-001, EG-CGP-005。
+## 1. P0 提供者契约与兼容
 
-- [ ] 1.2 **EG-F02** [owner=codegraph-plugin] 实现无写 doctor/索引身份检查与显式维护授权边界；缺索引、旧索引、未授权 sync 反例检查文件/refs/网络均无变化。 依赖：EG-F01。规格：EG-CGP-002, EG-CGP-003。
+- [ ] 1.1 **EG-F01** 核对上游 CLI 能力与当前 SessionStart/原文块/命令覆盖，先加独立运行兼容反例；不创建用户索引。 依赖：EG-K01。规格：EG-CGP-001, EG-CGP-005。
+- [ ] 1.2 **EG-F02** 编制版本/索引/源码身份与授权映射 fixture；缺索引、旧索引和查询时变化必须 unknown；转换器归 core。 依赖：EG-F01。规格：EG-CGP-002, EG-CGP-003。
+- [ ] 1.3 **EG-F03** 为已支持 CLI 输出提供完整/截断/坏报告 fixture 与 capability 清单；没有机器协议时明确 advisory，不虚构命令。 依赖：EG-F02。规格：EG-CGP-004。
 
-- [ ] 1.3 **EG-F03** [owner=codegraph-plugin] 提供可独立验收的 provider 兼容描述及固定版本探测；缺/不兼容 provider 返回准备阻塞，不能依赖七产品最终发布才可探测。 依赖：EG-F01, EG-K01。规格：EG-CGP-004, EG-CGP-005。
+## 2. P2 宿主与事实分发
 
-- [ ] 1.4 **EG-F04** [owner=codegraph-plugin] 适配现有 CodeGraph 原始输出到版本化事实入口并保留原件；未知版本、损坏输出拒绝，查询 success 不成为工程通过。 依赖：EG-F03。规格：EG-CGP-001, EG-CGP-005。
+- [ ] 2.1 **EG-F04** 执行 unittest、README parity、命令覆盖及实际宿主 SessionStart；插件文档与官方原文块分离，分别记录宿主限制。 依赖：EG-F03。规格：EG-CGP-005。
 
-- [ ] 1.5 **EG-F05** [owner=codegraph-plugin] 实现原始路径、symbol/edge/sourceSpan、source/index/producer 摘要映射；真实查询与源码位置对照，旧候选不可复用。 依赖：EG-F02, EG-F04。规格：EG-CGP-002, EG-CGP-004。
+## 3. P3 符号与影响契约
 
-- [ ] 1.6 **EG-F06** [owner=codegraph-plugin] 实现语言/解析方式/coverage/limitations 与输出预算，包含截断、动态边未知和独立合法反例。 依赖：EG-F05。规格：EG-CGP-004。
+- [ ] 3.1 **EG-F05** 为符号/调用/API/受影响测试定义查询能力与解析类型测试集，包含宏/反射/跨语言 unknown，供 core EG-K21 使用。 依赖：EG-F03。规格：EG-CGP-002, EG-CGP-004。
+- [ ] 3.2 **EG-F06** 共同验收不同文件 API 影响样例与源码位置漂移；不据 affectedTests 删减必需回归。 依赖：EG-F05, EG-K21。规格：EG-CGP-004。
 
-- [ ] 1.7 **EG-F07** [owner=codegraph-plugin] 与 ArchGuard/GitGuard/TestGuard 消费方执行共同事实黄金样本及真实查询对照；不支持语言保持 unknown。 依赖：EG-F06, EG-K21。规格：EG-CGP-002, EG-CGP-005。
+## 4. P4 基线与发行
 
-- [ ] 1.8 **EG-F08** [owner=codegraph-plugin] 完成实际宿主安装/启动/查询/移除、N/N-1 互操作与发布清单；原提示与 fail-open 行为不漂移，缺格保持未验收。 依赖：EG-F07, EG-K20。规格：EG-CGP-001, EG-CGP-005。
+- [ ] 4.1 **EG-F07** 定义不同上游版本与事实模型的可比性、升级/回滚和许可来源；不自动重建用户索引。 依赖：EG-F06。规格：EG-CGP-002, EG-CGP-005。
+- [ ] 4.2 **EG-F08** 完成不可变版本、manifest/市场同步和安装回执；索引可用、宿主接线和治理生效分别验收。 依赖：EG-F04, EG-F07。规格：EG-CGP-001, EG-CGP-005。

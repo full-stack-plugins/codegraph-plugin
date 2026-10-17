@@ -1,8 +1,12 @@
 # CodeGraph 命令清单
 
-来源：codegraph v1.5.0（`src/bin/codegraph.ts` 与 `src/mcp/tools.ts`）。本插件的 20 个 slash 命令一对一覆盖其中**除 `prompt-hook` 和 `serve --mcp` 之外的全部命令**——这两个是 codegraph 自家隐藏命令，分别供 Claude Code 的 UserPromptSubmit 钩子和 MCP stdio 入口使用，不暴露给用户。
+来源：codegraph v1.6.0（`src/bin/codegraph.ts` 与 `src/mcp/tools.ts`）。codegraph 共 23 个子命令，本插件以 21 个 slash 命令覆盖其中**除 `help`、`ui`/`web` 与两个隐藏命令 `prompt-hook` / `serve --mcp` 之外的全部命令**：
 
-## CLI 命令（20 个 slash command 已全部覆盖）
+- `help` —— 宿主自带帮助，无需插件暴露
+- `ui`（别名 `web`）—— 打开浏览器查看器，面向人而非 agent
+- `prompt-hook` / `serve --mcp` —— codegraph 自家隐藏命令，分别供 Claude Code 的 UserPromptSubmit 钩子和 MCP stdio 入口使用
+
+## CLI 命令（21 个 slash command 已覆盖）
 
 ### 生命周期
 
@@ -26,13 +30,14 @@
 
 | 命令 | MCP 等价工具 |
 |---|---|
-| `codegraph query <search>` | `codegraph_search` |
-| `codegraph explore <query...>` | `codegraph_explore`（**主工具**） |
-| `codegraph node [name]` | `codegraph_node` |
-| `codegraph files` | `codegraph_files` |
-| `codegraph callers <symbol>` | `codegraph_callers` |
-| `codegraph callees <symbol>` | `codegraph_callees` |
-| `codegraph impact <symbol>` | `codegraph_impact` |
+| `codegraph query <search>` | `codegraph_search`（默认不对 agent 列出） |
+| `codegraph explore <query...>` | `codegraph_explore`（**主工具，默认唯一列出**） |
+| `codegraph context <task...>` | （无 MCP 对应；CLI 专属，codegraph 1.6.0 新增） |
+| `codegraph node [name]` | `codegraph_node`（默认不对 agent 列出） |
+| `codegraph files` | `codegraph_files`（默认不对 agent 列出） |
+| `codegraph callers <symbol>` | `codegraph_callers`（默认不对 agent 列出） |
+| `codegraph callees <symbol>` | `codegraph_callees`（默认不对 agent 列出） |
+| `codegraph impact <symbol>` | `codegraph_impact`（默认不对 agent 列出） |
 | `codegraph affected [files...]` | （无 MCP 对应；CLI 专属） |
 
 ### 维护
@@ -44,14 +49,16 @@
 | `codegraph version` | 打印版本（亦可用 `codegraph -v`） |
 | `codegraph telemetry [status\|on\|off]` | 查看 / 修改匿名遥测开关 |
 
-### 隐藏（不暴露）
+### 隐藏 / 不暴露
 
-| 命令 | 用途 |
-|---|---|
-| `codegraph prompt-hook` | Claude Code UserPromptSubmit 钩子端点（codegraph 自家用） |
-| `codegraph serve --mcp` | MCP stdio 入口（宿主代理自启动，不应手跑） |
+| 命令 | 用途 | 不暴露原因 |
+|---|---|---|
+| `codegraph prompt-hook` | Claude Code UserPromptSubmit 钩子端点（codegraph 自家用） | 隐藏内部命令 |
+| `codegraph serve --mcp` | MCP stdio 入口（宿主代理自启动，不应手跑） | 隐藏内部命令 |
+| `codegraph help` | CLI 帮助 | 宿主自带帮助 |
+| `codegraph ui` / `codegraph web` | 在浏览器中打开图谱查看器 | 面向人的交互式命令，agent 无法消费 |
 
-## MCP 工具（8 个，定义于 `src/mcp/tools.ts:547-757`）
+## MCP 工具（8 个，定义于 `src/mcp/tools.ts` 的 `tools` 数组，约 1580–1760 行——行号随上游漂移，以符号名 `name: 'codegraph_*'` 为准）
 
 默认**只暴露 `codegraph_explore`**，其他 7 个需设置 `CODEGRAPH_MCP_TOOLS=explore,node,search,callers,callees,impact,files,status` 才能在 MCP 客户端可见。
 

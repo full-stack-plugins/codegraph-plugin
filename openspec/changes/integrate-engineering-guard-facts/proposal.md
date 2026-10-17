@@ -1,28 +1,26 @@
-# 工程守卫集成：codegraph-plugin
-
-来源：2026-10-17 按既有总体规划重建；原引用路径在当前检出及本地可用历史中未找到。本变更是新重建的任务定义，不声称恢复了历史原文，也不声明实现或用户验收已完成。依据为 [traceability](https://github.com/full-stack-plugins/codeguard/blob/8d7c0e997bf21b3306573b3be89ff8c312c9de38/docs/engineering-guard/traceability.md)、[acceptance](https://github.com/full-stack-plugins/codeguard/blob/8d7c0e997bf21b3306573b3be89ff8c312c9de38/docs/engineering-guard/acceptance.md)、[protocol](https://github.com/full-stack-plugins/codeguard/blob/8d7c0e997bf21b3306573b3be89ff8c312c9de38/docs/engineering-guard/protocol.md) 与本仓现有维护约束。
-
 ## Why
 
-总体规划引用的 F 系列任务缺少原生定义，无法校验依赖与验收归属。需要补齐本插件的唯一实施账本，并把已有插件能力接到七产品的版本化证据协议；不得把规划补齐等同于产品交付。
+工程守卫需要可追溯的源码关系事实，但 CodeGraph 的查询成功、旧索引或截断输出都不能直接证明架构合规。插件需明确接入契约和能力边界，同时继续保持上游 CLI 的纯客户端定位。
 
 ## What Changes
 
-- 在本仓保留 EG-CGP-001、EG-CGP-002、EG-CGP-003、EG-CGP-004、EG-CGP-005 的职责及可观察行为。
-- 定义 EG-F01、EG-F02、EG-F03、EG-F04、EG-F05、EG-F06、EG-F07、EG-F08，全部待实施；保留总体规划的稳定引用。
-- provider 兼容证明先于消费方最终发布；最终迁移验收仍要求实际产品、宿主、版本与保护证据，不减少验收范围。
-- 不初始化新规格体系，不改变既有运行时、技能来源锁、Hook 语义、批准策略或发布流程。
+- 规划 CodeGraph 提供者的能力清单、版本/索引/源码身份和不完整结果映射；实际事实转换器由 codeguard 的工程内核持有，本插件只提供接入说明和既有命令调度约束。
+- 保留仅 SessionStart、官方提示词原文、无索引静默和 fail-open；不增加阻断 Hook，不修改或 vendor 上游 CLI。
+- 缺索引、过期、未知解析语义、输出截断均保留 unknown；索引创建/更新遵守用户授权。
+- P3 接入符号影响与并行变更风险；P4 增加事实基线版本协商，仍不输出架构放行。
 
 ## Capabilities
 
 ### New Capabilities
 
-- `engineering-fact-provider`：本插件面向公共工程协议的来源、范围、覆盖、权限与生命周期边界。
+- `engineering-fact-provider`: 代码事实提供者的来源、能力、覆盖和兼容契约。
 
 ### Modified Capabilities
 
-无；既有规格继续适用，不通过本变更改写已确认行为。
+无。既有 session-start-prompt、commands-coverage 行为保持。
 
 ## Impact
 
-计划影响本插件的适配入口、证据投影、测试与未来发布。实施时遵守 AGENTS.md；受管技能不在插件内手改，真实宿主和托管保护不得由离线模拟替代。普通验证不顺带安装、初始化、索引、外发或 Git 写动作。
+插件文档、命令能力映射、协议 fixture 和宿主验收；不改变上游 codegraph。共同协议由 codeguard/add-engineering-guard-core 持有，转换器不在两个仓库重复实现。
+
+本轮仅规划；仓库历史 `openspec/v1` schema 不被当前 CLI 识别，新 change 显式使用可用的 spec-driven；未修改根 config 或旧 change。

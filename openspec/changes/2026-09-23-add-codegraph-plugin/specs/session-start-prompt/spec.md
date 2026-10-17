@@ -30,7 +30,7 @@ When the host fires SessionStart, the plugin hook SHALL detect whether the worki
 
 ### Requirement: CodeGraph Prompt Verbatim Sync
 
-The block written to disk and emitted as additionalContext SHALL be byte-equal to the upstream codegraph instructions-template.ts CODEGRAPH_INSTRUCTIONS_BLOCK constant at the time of last sync. The current reference is codegraph v1.5.0 (2026-07-21).
+The block written to disk and emitted as additionalContext SHALL be byte-equal to the upstream codegraph instructions-template.ts CODEGRAPH_INSTRUCTIONS_BLOCK constant at the time of last sync. The current reference is codegraph v1.6.0 (2026-08-26), re-verified byte-equal in plugin 0.1.7.
 
 #### Scenario: 上游文本漂移
 

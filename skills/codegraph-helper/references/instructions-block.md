@@ -2,7 +2,7 @@
 
 下述文本必须与 codegraph 上游 `src/installer/instructions-template.ts:42-51` 的 `CODEGRAPH_INSTRUCTIONS_BLOCK` 完全一致。
 
-最后一次同步：codegraph v1.5.0 (2026-07-21)。
+最后一次同步：codegraph v1.6.0 (2026-08-26)——逐字节一致（805 bytes），无文本漂移。
 
 ---
 

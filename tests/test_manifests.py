@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+import re
 import unittest
 from pathlib import Path
 
@@ -66,6 +67,24 @@ class TestSkillFrontmatter(unittest.TestCase):
         if skill_md.exists():
             lines = skill_md.read_text().count("\n")
             self.assertLess(lines, 500, f"SKILL.md {lines} 行超 500 行限制")
+
+    def test_description_not_gated_on_index_presence(self) -> None:
+        """AGENTS.md 纪律：技能 description 不得以「已有 .codegraph/」为激活门槛。
+
+        若门槛写回「仓库根有 .codegraph/ 目录时使用」，未索引仓库里技能根本不
+        触发，其「未索引则提示用户」分支永远执行不到——插件的发现性目的被架空。
+        """
+        skill_md = PLUGIN_ROOT / "skills" / "codegraph-helper" / "SKILL.md"
+        front = skill_md.read_text(encoding="utf-8").split("---", 2)[1]
+        gated = re.search(r"\.codegraph/`?\s*(?:目录)?(?:存在)?时使用", front)
+        self.assertIsNone(
+            gated,
+            "SKILL.md description 以 .codegraph/ 存在为激活门槛，"
+            "未索引仓库无法触发「提示初始化」分支（见 AGENTS.md 发现性纪律）",
+        )
+        # 反向断言：必须显式声明「无论是否已索引」且包含检查动作
+        self.assertRegex(front, r"无论|不论|regardless")
+        self.assertRegex(front, r"codegraph init")
 
 
 class TestReadmeParity(unittest.TestCase):
