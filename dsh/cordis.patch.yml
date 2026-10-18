@@ -4,4 +4,4 @@
 # for the other hosts.
 - insert:
     - id: codegraph-plugin
-      name: '@partme-dsh/codegraph'
+      name: 'codegraph'

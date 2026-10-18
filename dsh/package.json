@@ -1,5 +1,5 @@
 {
-  "name": "@partme-dsh/codegraph",
+  "name": "codegraph",
   "version": "0.3.0",
   "description": "Inject the official CodeGraph prompt at session start (only when a `.codegraph/` directory exists) and expose 21 of codegraph's 23 CLI commands as slash commands for Codex/ZCode/Kimi/Claude Code. Pure Python stdlib.",
   "type": "module",
@@ -31,5 +31,6 @@
     "bundle": {
       "patch": "./cordis.patch.yml"
     }
-  }
+  },
+  "private": true
 }
