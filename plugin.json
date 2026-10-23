@@ -2,7 +2,7 @@
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "codegraph",
   "version": "0.3.0",
-  "description": "Inject the official CodeGraph prompt at session start (only when a `.codegraph/` directory exists) and expose 21 of codegraph's 23 CLI commands as slash commands for Codex/ZCode/Kimi/Claude Code. Pure Python stdlib.",
+  "description": "Injects the official CodeGraph prompt when a .codegraph directory exists and exposes 21 CLI commands as slash commands. Pure Python stdlib.",
   "author": {
     "name": "Full Stack Plugins",
     "url": "https://github.com/full-stack-plugins"
@@ -20,8 +20,8 @@
   "extensions": {
     "com.openai": {
       "interface": {
-        "displayName": "CodeGraph",
-        "shortDescription": "Discoverable codegraph — official prompt + 21 CLI commands",
+        "displayName": "Code Graph Search · CodeGraph",
+        "shortDescription": "Symbols, call chains and impact queries on a local index",
         "longDescription": "Injects the official CodeGraph prompt at SessionStart (only when `.codegraph/` exists). Exposes 21 of codegraph's 23 CLI commands as slash commands. Pure Python stdlib.",
         "developerName": "Full Stack Plugins",
         "category": "Developer Tools",
@@ -43,10 +43,11 @@
           "跑一下 /codegraph-status，看索引是否过期"
         ],
         "brandColor": "#0F766E",
-        "composerIcon": "./assets/composer-icon.png",
+        "composerIcon": "./assets/official-logo.png",
         "logo": "./assets/official-logo.png",
         "logoDark": "./assets/official-logo.png",
-        "screenshots": []
+        "screenshots": [],
+        "composerIconDark": "./assets/official-logo.png"
       }
     },
     "ai.nanoco.nanoclaw": {
