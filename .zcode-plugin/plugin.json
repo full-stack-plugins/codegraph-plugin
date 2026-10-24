@@ -5,7 +5,7 @@
     "en": "CodeGraph · Code Graph Search",
     "zh-CN": "CodeGraph（代码图谱检索）"
   },
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "存在 .codegraph 时注入官方提示词，并把 21 条 CLI 命令暴露为斜杠命令；纯 Python 标准库。",
   "description_i18n": {
     "en": "Injects the official CodeGraph prompt when a .codegraph directory exists and exposes 21 CLI commands as slash commands. Pure Python stdlib.",
