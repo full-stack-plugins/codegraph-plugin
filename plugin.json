@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "codegraph",
-  "version": "0.3.1",
+  "version": "0.3.0",
   "description": "存在 .codegraph 时注入官方提示词，并把 21 条 CLI 命令暴露为斜杠命令；纯 Python 标准库。",
   "author": {
     "name": "Full Stack Plugins",
