@@ -1,7 +1,7 @@
 {
   "name": "full-stack-plugins-codegraph",
   "interface": {
-    "displayName": "CodeGraph · Code Graph Search"
+    "displayName": "CodeGraph（代码图谱检索）"
   },
   "plugins": [
     {
