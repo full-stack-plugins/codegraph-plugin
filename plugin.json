@@ -20,7 +20,7 @@
   "extensions": {
     "com.openai": {
       "interface": {
-        "displayName": "Code Graph Search · CodeGraph",
+        "displayName": "CodeGraph · Code Graph Search",
         "shortDescription": "Symbols, call chains and impact queries on a local index",
         "longDescription": "Injects the official CodeGraph prompt at SessionStart (only when `.codegraph/` exists). Exposes 21 of codegraph's 23 CLI commands as slash commands. Pure Python stdlib.",
         "developerName": "Full Stack Plugins",

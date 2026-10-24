@@ -22,7 +22,7 @@
   "skills": "./skills/",
   "commands": "./commands/",
   "interface": {
-    "displayName": "Code Graph Search · CodeGraph",
+    "displayName": "CodeGraph · Code Graph Search",
     "shortDescription": "Symbols, call chains and impact queries on a local index",
     "longDescription": "For AI coding agents. At session start, when a `.codegraph/` directory exists, this plugin writes the official CodeGraph prompt block (verbatim from upstream `instructions-template.ts`) to `<cwd>/.claude/CLAUDE.md` or `<cwd>/AGENTS.md` using atomic marker-fenced replacement, and injects the same block as SessionStart additionalContext. 21 of codegraph's 23 CLI commands are exposed as slash commands. Pure Python stdlib; no third-party runtime dependencies."
   },

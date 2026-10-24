@@ -1,7 +1,7 @@
 {
   "name": "full-stack-plugins-codegraph",
   "interface": {
-    "displayName": "Code Graph Search · CodeGraph"
+    "displayName": "CodeGraph · Code Graph Search"
   },
   "plugins": [
     {
@@ -20,7 +20,7 @@
       "description": "Injects the official CodeGraph prompt when a .codegraph directory exists and exposes 21 CLI commands as slash commands. Pure Python stdlib.",
       "icon": "https://cdn.jsdelivr.net/gh/full-stack-plugins/codegraph-plugin@v0.3.0/assets/official-logo.png",
       "interface": {
-        "displayName": "Code Graph Search · CodeGraph",
+        "displayName": "CodeGraph · Code Graph Search",
         "shortDescription": "Symbols, call chains and impact queries on a local index",
         "logo": "https://cdn.jsdelivr.net/gh/full-stack-plugins/codegraph-plugin@v0.3.0/assets/official-logo.png"
       }
