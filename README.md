@@ -1,130 +1,160 @@
-# CodeGraph Plugin
+# CodeGraph（代码图谱检索）
 
-## Plugin marketplaces
+> 符号、调用链与影响面查询，本地索引
 
-This plugin belongs to **Full-stack development**.
+**版本**：0.3.0 · **许可证**：Apache-2.0 · **技能**：1 个
 
-| Category | Marketplace | Purpose |
-| --- | --- | --- |
-| Full-stack development | [Full Stack Plugins](https://github.com/partme-ai/full-stack-plugins) | Architecture and UI design, code understanding, quality checks, code review, workflow governance, and server operations |
-| AIGC content creation | [Full AIGC Plugins](https://github.com/partme-ai/full-aigc-plugins) | Image, video, audio, music, 3D, and multimodal content creation |
+[English](README.en.md) · [安装](#安装) · [快速开始](#快速开始) · [项目结构](#项目结构)
 
-> Discoverable CodeGraph — official prompt injection + 21 of the 23 CLI commands as slash commands, for Codex / ZCode / Kimi / Claude Code.
+## 项目定位
 
-![CodeGraph Plugin](assets/banner.svg)
+存在 .codegraph 时注入官方提示词，并把 21 条 CLI 命令暴露为斜杠命令；纯 Python 标准库。
 
-## What this plugin does
+本插件属于研发工具线，面向需要在真实仓库或真实服务上完成操作、并保留可核验结果的用户。
 
-Three things, and **only** these three:
+## 一眼看懂
 
-1. **At session start**, when `<cwd>/.codegraph/` exists, this plugin injects the official CodeGraph prompt block (verbatim from upstream `codegraph/src/installer/instructions-template.ts`) into:
-   - The current session, via `SessionStart.additionalContext` JSON output.
-   - `<cwd>/.claude/CLAUDE.md` if it exists; else `<cwd>/AGENTS.md`. Uses atomic, marker-fenced section replacement — byte-equal content is a no-op, so this is safe to run alongside `codegraph install`.
-2. **Exposes 21 of codegraph's 23 CLI commands** as slash commands in two formats: JSON (`commands/*.json`, declared in `kimi.plugin.json`) and Markdown (`kimi-commands/*.md`), including the four hidden-but-useful maintenance commands (`daemon`, `unlock`, `version`, `telemetry`).
-3. **Registers a discovery skill** (`codegraph-helper`) that makes the agent **check whether the repo is indexed and, if not, proactively offer to index it**. The skill activates on code-structure questions *whether or not* `.codegraph/` exists: it checks first, then either answers via CodeGraph or tells the user 「this repo isn't indexed yet — want me to index it?」 and runs `codegraph init` once the user agrees.
+```text
+仓库 / 服务 / 配置 / 请求
+        │
+        ▼
+CodeGraph（代码图谱检索） 技能（检查 → 计划 → 执行 → 核验）
+        │
+        ├── MCP 服务
+        └── 固定 CLI / API
+        │
+        ▼
+变更结果 + 证据 + 回退路径
+```
 
-## What this plugin does **not** do
+## 能力与边界
 
-- It does **not** modify or replace the `codegraph` CLI. The upstream `colbymchenry/codegraph` (MIT) is the source of truth.
-- It does **not** install the `codegraph` CLI. Users run `npm i -g @colbymchenry/codegraph` (or the install script) themselves; the plugin just exposes `/codegraph-install` as a guided wrapper around `codegraph install` for MCP wiring.
-- It does **not** run `codegraph init` **without asking**. Indexing writes a `.codegraph/` directory, so the agent must get consent first — but it *does* detect the missing index and prompt for it automatically, because that discovery is the whole point of this plugin. (The SessionStart hook itself stays silent in un-indexed repos, matching the upstream prompt's own "skip CodeGraph entirely" wording.)
-- It does **not** hook `PreToolUse`, `PostToolUse`, `UserPromptSubmit`, or `Stop` — only `SessionStart`. This avoids collisions with codeguard-plugin and other plugins that own those events.
-
-## Requirements
-
-- **A working `codegraph` CLI** in `PATH`. Install via:
-  ```bash
-  curl -fsSL https://raw.githubusercontent.com/colbymchenry/codegraph/main/install.sh | sh
-  # or:
-  npm i -g @colbymchenry/codegraph
-  ```
-- **A host agent** (Claude Code, Cursor, Codex CLI, opencode, Hermes Agent, Gemini CLI, Antigravity, or Kiro). For MCP-aware tools the host should already have `codegraph install` run once; otherwise `codegraph_explore` will be missing and the slash commands will fall back to CLI.
-- **A `.codegraph/` directory** in the cwd for the SessionStart hook to activate. Without it the plugin is silent.
-
-## Slash commands
-
-21 commands. Format mirrors codegraph's CLI surface. `help` and `ui`/`web` are intentionally not exposed: `help` is covered by the host, and `ui`/`web` opens a browser viewer meant for humans, not agents.
-
-| Command | Equivalent CLI | What it does |
+| 能力 | 说明 | 边界 |
 |---|---|---|
-| `/codegraph-init` | `codegraph init [path]` | Initialize CodeGraph in the current project |
-| `/codegraph-uninit` | `codegraph uninit [path]` | Remove the `.codegraph/` directory (irreversible) |
-| `/codegraph-install` | `codegraph install` | One-time wiring of MCP server into host agents |
-| `/codegraph-uninstall` | `codegraph uninstall` | Remove MCP wiring from host agents |
-| `/codegraph-index` | `codegraph index [path]` | Rebuild the full index from scratch |
-| `/codegraph-sync` | `codegraph sync [path]` | Incrementally sync (watcher auto-runs this) |
-| `/codegraph-status` | `codegraph status [path]` | Show index status & statistics |
-| `/codegraph-query` | `codegraph query <search>` | Search symbols by keyword |
-| `/codegraph-explore` | `codegraph explore <query>` | Multi-symbol source + call paths (primary entry) |
-| `/codegraph-node` | `codegraph node <name>` | One symbol's source + caller/callee trail, or one file |
-| `/codegraph-files` | `codegraph files` | Show indexed project file tree |
-| `/codegraph-callers` | `codegraph callers <symbol>` | Find what calls a symbol |
-| `/codegraph-callees` | `codegraph callees <symbol>` | Find what a symbol calls |
-| `/codegraph-impact` | `codegraph impact <symbol>` | Find what would be affected by changing a symbol |
-| `/codegraph-affected` | `codegraph affected [files]` | Find test files affected by changes |
-| `/codegraph-daemon` | `codegraph daemon` | Manage background daemons |
-| `/codegraph-unlock` | `codegraph unlock [path]` | Remove a stale lock file |
-| `/codegraph-version` | `codegraph version` | Print installed version |
-| `/codegraph-telemetry` | `codegraph telemetry [status\|on\|off]` | View or change telemetry |
-| `/codegraph-upgrade` | `codegraph upgrade [version]` | Upgrade codegraph CLI |
+| 检查 | 读取当前状态与配置 | 不修改未授权目标 |
+| 计划 | 说明将执行的步骤与影响 | 高风险操作需明确确认 |
+| 执行 | 通过 MCP 或固定工具完成操作 | 不绕过权限与审计 |
+| 核验 | 回读结果、日志与状态 | 命令成功不等于目标达成 |
+| 恢复 | 保留回退路径与证据 | 不确定时不自动重放 |
 
-Hidden commands (`prompt-hook`, `serve --mcp`) are **not** exposed by this plugin.
+## 架构与核心流程
 
-## How the SessionStart hook behaves
-
-```
-[SessionStart]
-    │
-    ▼
-Read cwd from JSON payload (fallback: os.getcwd())
-    │
-    ▼
-Check `<cwd>/.codegraph/` exists?
-    │
-    ├─ NO  → exit 0 silently. (Plugin does nothing; agent continues.)
-    │
-    └─ YES → resolve target file:
-              <cwd>/.claude/CLAUDE.md if exists
-              else <cwd>/AGENTS.md
-              (NEVER auto-creates <cwd>/.claude/)
-                │
-                ▼
-              Marker-fenced atomic write (byte-equal → no-op)
-                │
-                ▼
-              Emit SessionStart additionalContext JSON
-              with the full CodeGraph prompt block
+```text
+宿主 / Agent
+   │  调用技能
+   ▼
+skills/codegraph-*  ──►  MCP 服务 / 固定 CLI
+                              │
+                              ▼
+                     目标系统 / 仓库
+                              │
+                              ▼
+                     回读、核验、报告
 ```
 
-The reminder launcher tries `python`, then `python3`, with UTF-8 enabled. If neither interpreter starts, it exits 0. Library-loading and injection errors also fail open; failure to write the instruction file still permits session-context injection. Host-enforced timeouts or process termination remain outside this guarantee.
+原则：
 
-## Coexistence with `codegraph install`
+1. 先只读检查，再计划，再执行。
+2. 明确目标、范围、凭据和回退方式。
+3. 执行后回读真实现场，不只看退出码。
+4. 不确定时停止并报告，不自动重试有副作用的操作。
 
-Codegraph's own `codegraph install` writes the same prompt block to `~/.claude/CLAUDE.md` (or local `./.claude/CLAUDE.md`). The plugin's marker-fenced replacement is **byte-equal idempotent**, so:
+## 兼容性
 
-- If the user has already run `codegraph install`, the plugin's hook is a no-op on that cluster.
-- If the user runs `codegraph install` *after* installing this plugin, `codegraph install`'s own marker-fenced writer (see `codegraph/src/installer/targets/shared.ts:130-194`) is also byte-equal idempotent — no overwrite churn.
+| 项目 | 状态 |
+|---|---|
+| 宿主 | 支持 MCP 的宿主 |
+| 运行时 | 以插件清单与实际安装环境为准 |
+| 平台 | 以发行说明与目标系统为准 |
 
-The plugin's contribution over `codegraph install` alone:
+## 安装
 
-- **Two audiences covered**: codegraph's installer only writes files (reaches Task-tool subagents via the project instructions file); the plugin also emits `additionalContext` for the main agent at runtime.
-- **AGENTS.md fallback**: if a project doesn't use `.claude/CLAUDE.md`, the plugin writes to `AGENTS.md` (the OpenSpec / multi-agent convention).
-- **Slash commands**: codegraph install doesn't expose any; this plugin covers 21 of 23 (everything except `help`, `ui`/`web`, and the two hidden `prompt-hook` / `serve --mcp`).
+```bash
+codex plugin marketplace add partme-ai/full-stack-plugins
+codex plugin add codegraph@full-stack-plugins
+```
 
-## Maintenance
+安装后重启宿主，先做只读检查。
 
-- **Version bump + manifest sync** is mandatory. Run `node scripts/bump-plugin.mjs codegraph patch|minor|major` after any code change.
-- **Sync from upstream**: when codegraph's CHANGELOG mentions `instructions-template.ts`, manually re-sync `scripts/codegraph_lib/prompt.py` and bump patch. See `AGENTS.md`.
-- **Plugin-local skills** are tracked in `plugin-local-skills.json`. The `skills.lock.json` is empty by design — no third-party skills are vendored.
+## 快速开始
 
-## Architecture
+1. 确认目标、环境、权限和影响范围。
+2. 只读检查现状，记录基线。
+3. 执行一次有界变更。
+4. 回读目标状态、日志和关键指标。
+5. 保存证据；失败时按回退路径恢复。
 
-See [`docs/codegraph-architecture.md`](docs/codegraph-architecture.md) for the plugin's layered design.
+## 配置
 
-## License
+按插件文档配置 MCP 地址、认证方式和目标环境。不要把令牌、密码或私钥写入仓库。
 
-Apache-2.0. See [LICENSE](LICENSE). The official CodeGraph prompt block in `scripts/codegraph_lib/prompt.py` is verbatim from the upstream [colbymchenry/codegraph](https://github.com/colbymchenry/codegraph) project (MIT) — see [NOTICE](NOTICE) for attribution.
+## 扩展契约
 
-## Privacy
+新增技能时应使用 `codegraph-` 前缀，声明触发条件、权限边界和失败处理，通过 MCP 或固定工具执行，并在变更后回读核验。
 
-See [PRIVACY.md](PRIVACY.md). The plugin is client-side only, makes no network calls, reads no user source code, and writes only to host instruction files using marker-fenced replacement.
+## 重试、幂等与恢复
+
+- 失败后先检查目标当前状态。
+- 不自动重放已产生副作用的操作。
+- 重试前确认幂等条件与回退路径。
+- 保留命令、日志和结果证据。
+
+## 数据与状态
+
+- 凭据只从安全配置读取。
+- 变更前后的状态分别记录。
+- 不把生产数据复制到不受控目录。
+
+## 安全
+
+- 遵循最小权限原则。
+- 高风险操作必须明确确认。
+- 发现凭据泄露先轮换，再清理痕迹。
+- 不绕过审计、权限或分支保护。
+
+## 可观测性与运行
+
+记录命令、目标、时间、结果和关键指标；交付前回读一次真实状态。
+
+## 开发与验证
+
+```bash
+node --test
+python3 -m pytest
+```
+
+## 打包与发布
+
+版本与清单、市场、tag 一致；发布后重新安装并做一次只读检查。
+
+## 升级与迁移
+
+升级前备份配置与状态；确认兼容性；迁移后重新核验连接和权限。
+
+## 故障排查
+
+| 现象 | 检查 |
+|---|---|
+| 连接失败 | 地址、网络、认证 |
+| 权限不足 | 账号角色与令牌范围 |
+| 操作无效果 | 回读目标状态与日志 |
+| 结果不确定 | 停止重试，先核对现场 |
+
+## 项目结构
+
+```text
+codegraph-plugin/
+├── .zcode-plugin/      # ZCode 清单
+├── .codex-plugin/      # Codex 清单
+├── skills/             # 1 个技能
+├── docs/               # 架构与验证记录
+└── assets/             # 图标与静态资源
+```
+
+## 贡献与支持
+
+提交问题时附上插件版本、宿主、目标环境、命令、日志和预期结果。不要附凭据或生产数据。
+
+## 许可证
+
+Apache-2.0，见 [LICENSE](LICENSE)。
