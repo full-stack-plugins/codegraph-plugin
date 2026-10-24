@@ -1,12 +1,19 @@
 {
   "name": "codegraph",
   "version": "0.3.0",
-  "description": "Injects the official CodeGraph prompt when a .codegraph directory exists and exposes 21 CLI commands as slash commands. Pure Python stdlib.",
+  "description": "存在 .codegraph 时注入官方提示词，并把 21 条 CLI 命令暴露为斜杠命令；纯 Python 标准库。",
   "author": {
     "name": "Full Stack Plugins",
     "url": "https://github.com/full-stack-plugins"
   },
   "homepage": "https://github.com/full-stack-plugins/codegraph-plugin",
   "repository": "https://github.com/full-stack-plugins/codegraph-plugin",
-  "license": "Apache-2.0"
+  "license": "Apache-2.0",
+  "displayName": "CodeGraph（代码图谱检索）",
+  "displayName_i18n": {
+    "zh-CN": "CodeGraph（代码图谱检索）"
+  },
+  "description_i18n": {
+    "zh-CN": "存在 .codegraph 时注入官方提示词，并把 21 条 CLI 命令暴露为斜杠命令；纯 Python 标准库。"
+  }
 }
