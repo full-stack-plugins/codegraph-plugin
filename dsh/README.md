@@ -7,7 +7,7 @@ host manifest; Claude Code, Codex, ZCode and Kimi keep using those.
 ## Install
 
 ```sh
-dsh plugin --profile desktop add link:/Users/wandl/workspaces/workspace-agent-skills/full-stack-plugins-repositories/codegraph-plugin/dsh
+dsh plugin --profile desktop add link:/path/to/codegraph-plugin
 ```
 
 ## What DSH gets
